@@ -9,6 +9,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@umijs/max": "^4.5.0",
     "antd": "^5.27.4",
     "umi": "^4.4.12"
   },

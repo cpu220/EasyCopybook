@@ -1,8 +1,11 @@
-import { defineConfig } from "umi";
+import { defineConfig } from "@umijs/max";
 
 export default defineConfig({
   routes: [
-    { path: "/", component: "index" }, 
+    { path: "/", component: "index" },
   ],
   npmClient: 'yarn',
+  model: { 
+    CONTENT: './models/CONTENT',
+  }
 });
