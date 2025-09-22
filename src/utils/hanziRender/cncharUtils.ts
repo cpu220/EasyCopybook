@@ -80,6 +80,7 @@ export const renderCopybookInDOM = (containerId: string): void => {
             const drawConfig = {
               el:`#${item.id}`,
               clear:true,
+              type:renderConfig.type,
               onComplete:()=>{
                 console.log(`${char} 渲染完成`);
               },

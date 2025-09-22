@@ -4,19 +4,18 @@ import { useModel } from 'umi';
 // import { useGlobalValue, useGlobalActions } from '@/context/GlobalContext';
 
 import BaseGrid from './components/gridTemplate/baseGrid/index';
-import { renderCopybookInDOM, initCnchar } from '@/utils';
+import { renderCopybookInDOM } from '@/utils';
  
 
 const ContentBox: React.FC = () => {
     // 使用 UMI 4.x 数据流
     const { templateInfo, updateTemplateInfo } = useModel('CONTENT');
 
-    // 初始化 cnchar
+    // 注意：cnchar已在应用入口(app.tsx)中初始化，业务代码无需感知
     useEffect(() => {
-        initCnchar();
-        console.log('初始化cnchar完成');
+        console.log('ContentBox组件挂载');
         console.log('templateInfo', templateInfo);
-    }, []); // 只在组件挂载时初始化一次
+    }, []); // 只在组件挂载时执行一次
 
 
 

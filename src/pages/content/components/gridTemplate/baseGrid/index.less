@@ -16,7 +16,7 @@
 
 
 .grid-item {
-    border: solid 1px #000;
+    // border: solid 1px #000;
      display: flex;
     justify-content: center;
     align-items: center;
@@ -27,51 +27,7 @@
      position: relative;
      overflow: hidden;
 }
-
-/* 字帖相关样式 */
-.copybook-item {
-    background-color: #fff;
-}
-
-.copybook-svg-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.copybook-svg-container svg {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-.copybook-info {
-    position: absolute;
-    bottom: 2px;
-    left: 0;
-    right: 0;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 2px 4px;
-    font-size: calc(12px * @charsheet-font-scale);
-    color: #333;
-    text-align: center;
-    border-top: 1px solid #ddd;
-}
-
-.copybook-info .stroke-count,
-.copybook-info .pinyin {
-    margin: 0;
-    line-height: 1.2;
-}
-
-.copybook-info .stroke-count {
-    font-size: calc(10px * @charsheet-font-scale);
-    color: #666;
-}
+ 
 
 .grid-item:first-child {
     margin-left: 0;
