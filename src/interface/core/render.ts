@@ -11,7 +11,12 @@ interface IGrid {
 export interface IFontItem {
     /** 字符 */
     char: string; 
-
+    /** 笔画数 */
+    strokes?: number;
+    /** 拼音 */
+    pinyin?: string;
+    /** 部首 */
+    radical?: string;
 }
 
 /**

@@ -3,10 +3,13 @@
  */
 
 
-import react, { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useModel } from 'umi';
 import { formatGridData } from '@/utils'
 import { IFontItem } from '@/interface'
+import { DEFAULT_CONFIG } from '@/const/core/render'
+
+const { templateConfig } = DEFAULT_CONFIG
 
 import styles from './index.less'
 
@@ -31,7 +34,11 @@ const BaseGrid: React.FC = () => {
         const key = `grid-item-${row}-${col}`
         console.log('createGridItem', key)
         return (
-            <div id={key} key={key} className={styles['grid-item']}>
+            <div
+                id={key}
+                key={key}
+                data-font={item.char}
+                className={styles['grid-item']}>
                 {item.char}
             </div>
         )
@@ -67,8 +74,8 @@ const BaseGrid: React.FC = () => {
      * @returns 
      */
     const createGrid = (list: string) => {
-
-        const arr = formatGridData(list, 10)
+        const { column } = templateConfig
+        const arr = formatGridData(list, column)
 
         const result = []
 

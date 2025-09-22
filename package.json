@@ -11,6 +11,7 @@
   "dependencies": {
     "@umijs/max": "^4.5.0",
     "antd": "^5.27.4",
+    "cnchar-all": "^3.2.6",
     "umi": "^4.4.12"
   },
   "devDependencies": {
