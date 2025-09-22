@@ -1,11 +1,19 @@
-import { defineConfig } from "@umijs/max";
+import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
   routes: [
-    { path: "/", component: "index" },
+    { path: '/', component: 'index' },
+    // { path: '/content', component: 'content' },
+    // { path: '/form', component: 'form' },
+    // { path: '/foot', component: 'foot' },
   ],
   npmClient: 'yarn',
-  model: { 
-    CONTENT: './models/CONTENT',
-  }
+  // 根据官方文档，需要同时启用 initial-state 和 model 插件
+  plugins: [
+    '@umijs/plugins/dist/initial-state',
+    '@umijs/plugins/dist/model',
+  ],
+  // 启用相关配置
+  initialState: {},
+  model: {},
 });

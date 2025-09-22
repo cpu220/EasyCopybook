@@ -4,7 +4,8 @@ import { Layout } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 import ContentBox from './content';
-import FormBox from './form';
+// import FormBox from './form';
+import LeftBox from './left'
 import FooterBox from './foot';
 import { GlobalProvider } from '../context/GlobalContext';
 
@@ -16,8 +17,8 @@ const HomePage: React.FC = (): React.ReactNode => {
       <Layout className={styles.layout}>
         <Header className={styles.header}>全局Context演示</Header>
         <Layout>
-          <Sider theme='light' width={400} className={styles.sider}>
-             <FormBox />
+          <Sider theme='light'  width={'25%'} className={styles.sider}>
+             <LeftBox />
           </Sider>
           <Content className={styles.content}>
              <ContentBox />
