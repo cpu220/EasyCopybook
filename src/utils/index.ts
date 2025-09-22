@@ -1,3 +1,1 @@
-export * from './render'
-// export * from './lib'
-export * from './hanziRender'
+export * from './render' 

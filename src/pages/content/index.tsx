@@ -4,7 +4,7 @@ import { useModel } from 'umi';
 // import { useGlobalValue, useGlobalActions } from '@/context/GlobalContext';
 
 import BaseGrid from './components/gridTemplate/baseGrid/index';
-import { renderCopybookInDOM } from '@/utils';
+ 
  
 
 const ContentBox: React.FC = () => {
@@ -22,15 +22,11 @@ const ContentBox: React.FC = () => {
     /**
      * 将指定的字体列表转换为网格数据格式
      */
-    const handleTransition = ()=>{
+    const handleTransition = async ()=>{
         const key =  'grid-container'
         console.log('开始转换为字帖', key)
         
-        // 调用 cnchar 工具渲染字帖效果
-        renderCopybookInDOM(key);
-        
-        // 显示转换成功的提示消息
-        message.success('已成功转换为字帖！');
+         
     }
     
 

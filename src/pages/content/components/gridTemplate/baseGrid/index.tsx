@@ -32,7 +32,7 @@ const BaseGrid: React.FC = () => {
      */
     const createGridItem = (item: IFontItem, row: number, col: number) => {
         const key = `grid-item-${row}-${col}`
-        console.log('createGridItem', key)
+        // console.log('createGridItem', key)
         return (
             <div
                 id={key}
@@ -61,7 +61,7 @@ const BaseGrid: React.FC = () => {
             resultDOM.push(itemDOM)
         }
         const key = `grid-row-${row}`
-        console.log('createGridRow', key)
+        // console.log('createGridRow', key)
         return (
             <div key={key} id={key} className={styles['grid-row']}>
                 {resultDOM}

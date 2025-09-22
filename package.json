@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@umijs/max": "^4.5.0",
-    "antd": "^5.27.4",
-    "cnchar-all": "^3.2.6",
-    "cnchar-data": "^1.1.0",
+    "antd": "^5.27.4", 
+    "hanzi-writer": "^3.7.3",
+    "hanzi-writer-data": "^2.0.1",
     "umi": "^4.4.12"
   },
   "devDependencies": {
