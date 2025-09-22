@@ -3,7 +3,7 @@ import cnchar from 'cnchar-all';
 import { IFontItem } from '@/interface';
 import { DEFAULT_CONFIG } from '@/const/core/render';
 
-// cnchar-all包已经包含了所有必要的数据，可以直接使用本地数据而不需要远程请求
+// 使用cnchar-all自带的离线数据，该包已经包含了所有必要的数据，可以直接使用本地数据而不需要远程请求
 
 /**
  * 将普通字符转换为字帖样式
@@ -120,6 +120,19 @@ export const initCnchar = (): void => {
     
     // 验证draw插件是否可用
     console.log('cnchar.draw功能可用状态:', typeof cnchar.draw === 'function');
+    
+    // 根据官方文档配置，指向本地cnchar-serve服务
+  if (typeof cnchar.draw === 'function' && typeof cnchar.draw.setResourceBase === 'function') {
+    try {
+      // 修正路径配置，确保draw插件请求数据时包含draw子目录
+      // 从curl测试看，正确的数据路径是 http://localhost:3002/draw/%E4%B8%80.json
+      cnchar.draw.setResourceBase('http://localhost:3002/draw/');
+      console.log('已修正cnchar.draw资源路径配置，现在会请求 http://localhost:3002/draw/ 目录下的数据');
+      console.log('请确保已运行 npm run cnchar-serve 命令启动本地数据服务');
+      } catch (err) {
+        console.error('设置cnchar.draw资源路径失败:', err);
+      }
+    }
   } catch (error) {
     console.error('Error initializing cnchar:', error);
   }

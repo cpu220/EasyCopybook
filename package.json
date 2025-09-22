@@ -6,12 +6,15 @@
     "build": "umi build",
     "postinstall": "umi setup",
     "setup": "umi setup",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "cnchar-serve": "lite-server -c bs-config.js",
+    "cnchar-prod": "cnchar-serve-prod"
   },
   "dependencies": {
     "@umijs/max": "^4.5.0",
     "antd": "^5.27.4",
     "cnchar-all": "^3.2.6",
+    "cnchar-data": "^1.1.0",
     "umi": "^4.4.12"
   },
   "devDependencies": {
