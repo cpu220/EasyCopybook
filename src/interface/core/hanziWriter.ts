@@ -30,11 +30,14 @@ export interface IDefaultStrokeFontRenderConfig extends IBaseFontRenderConfig {
 
 }
 
+export interface IRenderConfig {
+    fontStyleConfig: IDefaultStrokeFontRenderConfig;
+    borderStyleConfig: IDefaultBorderStyleConfig;
+    backgroundType: string;
+}
+
 export interface IDEFAULT_CONFIG {
     templateConfig: IDefaultTemplateConfig;
-    renderConfig: {
-        fontStyleConfig: IDefaultStrokeFontRenderConfig;
-        borderStyleConfig: IDefaultBorderStyleConfig;
-        backgroundType: string;
-    }
+    renderConfig: IRenderConfig
 }
+

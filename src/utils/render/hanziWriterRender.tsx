@@ -314,17 +314,24 @@ export const renderHanziForItem = (svgId: string, character: string, renderConfi
     ...fontStyleConfig,
   };
 
+  // 获取容器元素
+  const container = document.getElementById(svgId);
+  if (!container) {
+    console.error(`未找到ID为"${svgId}"的容器`);
+    return;
+  }
+
   // 字符验证
   if (!character || character.length === 0) {
-    console.warn('字符为空，无法渲染');
+    console.log('字符为空，渲染为空白米字格');
+    // 直接创建空白米字格
+    const { width, height } = fontStyleConfig;
+    createEmptyGridInContainer(svgId, width, height, borderStyleConfig);
     return;
   }
 
   // 只取第一个字符
   const str = character.length > 1 ? character[0] : character;
-
-  // 获取容器元素
-  const container = document.getElementById(svgId);
   if (!container) {
     console.error(`未找到ID为"${svgId}"的容器`);
     return;

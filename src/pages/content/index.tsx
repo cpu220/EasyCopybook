@@ -51,11 +51,11 @@ const ContentBox: React.FC = () => {
 
         // 合并所有必要的配置，确保渲染函数能获取到完整的配置信息
         const finalRenderConfig = {
-            ...fontStyleConfig, 
+            fontStyleConfig, 
             borderStyleConfig,
             backgroundType
         };
-
+        console.log('finalRenderConfig',finalRenderConfig) 
         await renderHanziInContainer(key, finalRenderConfig)
     }
 

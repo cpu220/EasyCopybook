@@ -195,6 +195,9 @@ const FormBox: React.FC = (): React.ReactNode => {
                 label: '1排 1个字',
                 value: '1x1'
               }, {
+                label: '1排 2个字',
+                value: '1x2'
+              },{
                 label: `1排 ${templateConfig.column}个字`,
                 value: `1x${templateConfig.column}`
               }, {
