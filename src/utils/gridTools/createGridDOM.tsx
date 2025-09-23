@@ -4,13 +4,15 @@
 
 // import React from 'react';
 
-import { IFontItem } from '@/interface';
+import { IFontItem, IDefaultTemplateConfig } from '@/interface';
 import { formatGridData } from './createGridData';
 import gridStyles from '@/pages/content/components/gridTemplate/baseGrid/index.less'
 
 
 const cellClassName = gridStyles['grid-item']
 const rowClassName = gridStyles['grid-row']
+const rowTipClassName = gridStyles['grid-row-tip-container']
+
 
 
 
@@ -43,7 +45,14 @@ const createGridItem = (item: IFontItem, row: number, col: number) => {
  * @param row 行索引
  * @returns 
  */
-const createGridRow = (arr: IFontItem[], row: number) => {
+const createGridRow = ({ arr, row, templateConfig, char }: {
+    arr: IFontItem[],
+    row: number,
+    templateConfig: IDefaultTemplateConfig,
+    char: string
+}) => {
+    const { pinyin, showStroke, strokeNumber, showStrokeOrder } = templateConfig;
+
 
     const resultDOM = []
 
@@ -53,10 +62,38 @@ const createGridRow = (arr: IFontItem[], row: number) => {
         resultDOM.push(itemDOM)
     }
     const key = `grid-row-${row}`
-    // console.log('createGridRow', key)
+
+    let tipDOM = null;
+    let pinyinDOM = null
+    let strokeOrderDOM = null
+    if (pinyin) {
+        // pinyinDOM = getPinYin()
+        pinyinDOM = <div className={gridStyles['grid-row-pinyin']}>pinyin</div>
+    }
+
+    if (showStrokeOrder) {
+        // strokeOrderDOM = getStrokeOrder(char)
+        strokeOrderDOM = <div className={gridStyles['grid-row-storke']}>笔画顺序</div>
+    }
+
+
+    if(pinyin || showStrokeOrder){
+        tipDOM = (
+            <div id={`${key}-tips-container`} className={rowTipClassName}>
+                {pinyinDOM}
+                {strokeOrderDOM}
+            </div>
+        )
+    } 
+    
+
     return (
         <div key={key} id={key} className={rowClassName}>
-            {resultDOM}
+            {tipDOM} 
+            <div id={`${key}-item-container`} className={gridStyles['grid-row-item-container']}>
+                {resultDOM}
+            </div>
+
         </div>
     )
 }
@@ -65,7 +102,7 @@ const createGridRow = (arr: IFontItem[], row: number) => {
  * 创建网格 网格项数组
  * @returns 
  */
-export const createGrid = (list: string, templateConfig: any) => {
+export const createGrid = (list: string, templateConfig: IDefaultTemplateConfig) => {
 
     const arr = formatGridData(list, templateConfig)
 
@@ -73,7 +110,12 @@ export const createGrid = (list: string, templateConfig: any) => {
 
     for (let y = 0; y < arr.length; y++) {
         // 行元素 
-        const rowDOM = createGridRow(arr[y], y)
+        const rowDOM = createGridRow({
+            arr: arr[y],
+            row: y,
+            templateConfig,
+            char: arr[y][0].char
+        })
         result.push(rowDOM)
     }
 

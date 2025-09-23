@@ -4,9 +4,11 @@
 
 .grid-row {
     padding: 10px;
-     display: flex;
+    width: 100%;
+    // display: flex;
     margin-bottom: calc(10px * @charsheet-font-scale);
     border: solid 1px #f00;
+    position: relative;
 }
 
 /* 每5行增加更大的底部间距 */
@@ -15,23 +17,50 @@
 }
 
 
-.grid-item {
-    // border: solid 1px #000;
-     display: flex;
-    justify-content: center;
-    align-items: center;
-     margin-left:  calc(6px * @charsheet-font-scale); /* 默认居左6px */
-     width: calc(60px * @charsheet-font-scale);
-     height: calc(60px * @charsheet-font-scale);
-     font-size: calc(60px * @charsheet-font-scale * 0.8);
-     position: relative;
-     overflow: hidden;
-}
- 
+.grid-row-item-container {
+    display: flex;
 
-.grid-item:first-child {
-    margin-left: 0;
+    .grid-item {
+        // border: solid 1px #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: calc(6px * @charsheet-font-scale);
+        /* 默认居左6px */
+        width: calc(60px * @charsheet-font-scale);
+        height: calc(60px * @charsheet-font-scale);
+        font-size: calc(60px * @charsheet-font-scale * 0.8);
+        position: relative;
+        overflow: hidden;
+    }
+
+
+    .grid-item:first-child {
+        margin-left: 0;
+    }
+
+    .grid-item:nth-child(5n) {
+        margin-right: calc(12px * @charsheet-font-scale);
+    }
 }
-.grid-item:nth-child(5n) {
-    margin-right: calc(12px * @charsheet-font-scale);
+
+
+
+
+.grid-row-tip-container {
+    border: solid 1px #000;
+    display: flex;
+
+    .grid-row-pinyin {
+        border: solid 1px #0ff;
+        display: flex;
+        justify-content: center;
+        width:calc(60px * @charsheet-font-scale);
+    }
+
+    .grid-row-storke {
+        border: solid 1px #ff0;
+        display: flex;
+        justify-content: center;
+    }
 }
