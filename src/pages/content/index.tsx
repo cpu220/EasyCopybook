@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import { Card, Button, Input, Space, Typography, Alert, Divider, Tag, message } from 'antd';
+import {
+  ExportOutlined,PrinterOutlined
+} from '@ant-design/icons';
 import { useModel } from 'umi';
 // import { useGlobalValue, useGlobalActions } from '@/context/GlobalContext';
 
 import BaseGrid from './components/gridTemplate/baseGrid/index';
-import { renderHanziForItem, renderHanziInContainer } from '@/utils';
+import { renderHanziInContainer } from '@/utils';
+import styles from './index.less'
 
 const ContentBox: React.FC = () => {
     // 使用 UMI 4.x 数据流，从CONTENT model中获取所有必要的配置
@@ -25,8 +29,7 @@ const ContentBox: React.FC = () => {
  
 
     // 在组件挂载后，当DOM渲染完成时自动触发handleTransition
-    useEffect(() => { 
-
+    useEffect(() => {  
         triggerTransition();
     }, []); // 只在组件挂载后执行一次
 
@@ -59,8 +62,13 @@ const ContentBox: React.FC = () => {
 
     return (
         <div >
-            <div>
-                <Button type="primary" onClick={handleTransition}>生成字帖</Button>
+            <div id="top-button-content" className={styles['top-button-content']} >
+                {/* <Button type="primary" onClick={handleTransition}>生成字帖</Button>
+                 */}
+                 <Space>
+                    <Button shape="circle" icon={<ExportOutlined />}></Button>
+                    <Button shape="circle" icon={<PrinterOutlined />}></Button>
+                 </Space>
             </div>
             <BaseGrid />
         </div>

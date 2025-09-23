@@ -15,9 +15,9 @@ const HomePage: React.FC = (): React.ReactNode => {
   return (
     <GlobalProvider initialData={{ formValue: '初始值' }}>
       <Layout className={styles.layout}>
-        <Header className={styles.header}>全局Context演示</Header>
+        <Header className={styles.header}></Header>
         <Layout>
-          <Sider theme='light'  width={'25%'} className={styles.sider}>
+          <Sider collapsible theme='light'  width={300} className={styles.sider}>
              <LeftBox />
           </Sider>
           <Content className={styles.content}>

@@ -67,7 +67,18 @@ const FormBox: React.FC = (): React.ReactNode => {
     }
   };
 
-
+ const handleChangeFontLibrary = (val: string)=>{
+  const selectedFontList = FONT_LIBRARY.find((lib) => String(lib.code) === String(val)) || FONT_LIBRARY[0];
+  // updateFontLibraryItem({
+  //   ...selectedFontList,
+  //   list: ''
+  // })
+   form.setFieldsValue({
+    fontLibrary: selectedFontList.code,
+    diyFontLibrary: selectedFontList.list || ''
+   })
+  
+ }
 
   return (
     <div style={{ padding: '16px' }}>
@@ -81,7 +92,7 @@ const FormBox: React.FC = (): React.ReactNode => {
             name="fontLibrary"
             rules={[{ required: true, message: '请选择字库' }]}
           >
-            <Select placeholder="请选择字库">
+            <Select placeholder="请选择字库" onChange={handleChangeFontLibrary}>
               {FONT_LIBRARY.map(lib => (
                 <Select.Option key={lib.code} value={lib.code}>
                   {lib.name}
