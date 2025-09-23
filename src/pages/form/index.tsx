@@ -1,92 +1,152 @@
 /**
- * 表单组件 - GlobalContext演示
- * 演示如何使用全局Context进行状态管理
+ * 表单组件 - 字帖配置
+ * 用于配置字帖的字库选择和渲染参数
  */
 
-import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Card, Space, message } from 'antd';
-import { useGlobalActions } from '@/context/GlobalContext';
+import React, { useEffect } from 'react';
+import { Row, Col, Form, Input, Select, InputNumber, ColorPicker, Button, Card, Space, message } from 'antd';
+import type { Color } from 'antd/es/color-picker';
+import { useModel } from 'umi';
+import { FONT_LIBRARY } from '@/const';
+import {  clearStringForLibrary } from '@/utils'
 
 const FormBox: React.FC = (): React.ReactNode => {
-  // 本地表单状态 - 只在组件内部使用，不影响其他组件
-  const [inputValue, setInputValue] = useState('');
-  
-  // 获取全局Context的操作方法
-  const { set, get } = useGlobalActions();
-  
-  // 组件挂载时从全局Context获取初始值
+  const [form] = Form.useForm();
+
+  // 使用UMI的model获取状态和操作方法
+  const {
+    fontLibraryItem,
+
+    fontStyleConfig,
+
+    updateFontStyleConfig,
+    updateFontLibraryItem
+
+  } = useModel('CONTENT');
+
+  // 初始化表单默认值
   useEffect(() => {
-    const initialValue = get('formValue', '') || '';
-    setInputValue(initialValue);
-  }, [get]);
-  
-  // 提交表单 - 将值保存到全局Context
-  const handleSubmit = () => {
-    if (inputValue.trim()) {
-      // 保存到全局Context，这会触发FooterBox的重新渲染
-      set('formValue', inputValue);
-      message.success('数据已保存到全局Context');
-    } else {
-      message.warning('请输入内容');
+    form.setFieldsValue({
+      fontLibrary: fontLibraryItem?.code || FONT_LIBRARY[0].code,
+      diyFontLibrary: fontLibraryItem.list || '',
+      // fontSize: fontStyleConfig.fontSize,
+      strokeColor: fontStyleConfig.strokeColor,
+      radicalColor: fontStyleConfig.radicalColor
+    });
+  }, [form, fontLibraryItem, fontStyleConfig]);
+
+  // 表单提交处理
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+
+      /**
+       * 清除字库中的非法字符
+       */
+      const _diyFontLibrary = clearStringForLibrary(values.diyFontLibrary);
+     
+      
+      // 1. 更新字库列表
+      const selectedFontList = FONT_LIBRARY.find(lib => lib.code === values.fontLibrary) || FONT_LIBRARY[0];
+      updateFontLibraryItem({
+        ...selectedFontList,
+        list: _diyFontLibrary
+      });
+
+      // 2. 更新渲染配置相关状态
+      updateFontStyleConfig({
+        // fontSize: values.fontSize,
+        strokeColor: values.strokeColor,
+        radicalColor: values.radicalColor
+      });
+
+      message.success('配置已保存，字帖将重新渲染');
+    } catch (error) {
+      console.error('表单验证失败:', error);
+      message.error('表单验证失败，请检查输入');
     }
   };
-  
-  // 重置表单
-  const handleReset = () => {
-    setInputValue('');
-    set('formValue', '');
-    message.info('表单已重置');
-  };
-  
-  // 用于观察组件重新渲染
-  console.log('FormBox 重新渲染');
-  
+
+
+
   return (
     <div style={{ padding: '16px' }}>
-      <Card title="全局Context演示表单" size="small">
-        <Form layout="vertical">
-          <Form.Item 
-            label="输入内容" 
-            help="输入时不会影响其他组件，只有点击提交时才会更新全局状态"
+      <Card title="字帖配置表单" size="small">
+        <Form
+          form={form}
+          layout="vertical">
+          {/* 字库选择 */}
+          <Form.Item
+            label="字库选择"
+            name="fontLibrary"
+            rules={[{ required: true, message: '请选择字库' }]}
           >
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="请输入要保存的内容"
-              style={{ marginBottom: '12px' }}
-            />
+            <Select placeholder="请选择字库">
+              {FONT_LIBRARY.map(lib => (
+                <Select.Option key={lib.code} value={lib.code}>
+                  {lib.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
-          
-          <Form.Item>
-            <Space>
-              <Button 
-                type="primary" 
-                onClick={handleSubmit}
+          <Form.Item
+            // label="字库选择"
+            name="diyFontLibrary"
+          // rules={[{ required: true, message: '请选择字库' }]}
+          >
+            <Input.TextArea rows={4} />
+          </Form.Item>
+
+
+          {/* 字体大小 */}
+          {/* <Form.Item
+            label="字体大小"
+            name="fontSize"
+            rules={[
+              { required: true, message: '请输入字体大小' },
+              { type: 'number', min: 10, max: 200, message: '字体大小应在10-200之间' }
+            ]}
+          >
+            <InputNumber min={10} max={200} style={{ width: '100%' }} />
+          </Form.Item> */}
+
+
+
+
+          <Row>
+            <Col span={12}>
+              {/* 偏旁颜色 */}
+              <Form.Item
+                label="偏旁颜色"
+                name="radicalColor"
+                rules={[{ required: true, message: '请选择偏旁颜色' }]}
+                getValueFromEvent={(color: Color) => color.toHexString()}
               >
-                提交到Context
-              </Button>
-              <Button 
-                onClick={handleReset}
+                <ColorPicker />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              {/* 笔画颜色 */}
+              <Form.Item
+                label="笔画颜色"
+                name="strokeColor"
+                rules={[{ required: true, message: '请选择笔画颜色' }]}
+                getValueFromEvent={(color: Color) => color.toHexString()}
               >
-                重置
-              </Button>
-            </Space>
+                <ColorPicker />
+              </Form.Item>
+            </Col>
+          </Row>
+
+
+          {/* 提交和重置按钮 */}
+          <Form.Item >
+
+            <Button type="primary" block onClick={handleSubmit}>
+              确定
+            </Button>
           </Form.Item>
         </Form>
-        
-        <div style={{ 
-          marginTop: '16px', 
-          padding: '12px', 
-          backgroundColor: '#f6f8fa', 
-          borderRadius: '6px',
-          fontSize: '12px',
-          color: '#666'
-        }}>
-          <strong>说明：</strong>
-          <br />• 输入框的值只在本组件内管理，输入时不会触发其他组件重新渲染
-          <br />• 点击"提交到Context"按钮时，才会将值保存到全局Context
-          <br />• 全局Context的值变化会触发FooterBox组件重新渲染并显示新值
-        </div>
       </Card>
     </div>
   );

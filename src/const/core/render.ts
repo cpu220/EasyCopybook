@@ -43,11 +43,14 @@ export const enum LAYOUT_TYPE {
 
 }
 
-const TemplateConfig = {
+/**
+ * 模版信息
+ * 定位是网格布局信息
+ */
+const DefaultTemplateConfig = {
     column: DefaultGridConfig.defaultCol,
-    wordsPerRow:1, // 每个字占几行
-    wordsPreCol:10, // 一行几个字
-
+    wordsPerRow: 1, // 每个字占几行
+    wordsPreCol: 10, // 一行几个字 
 }
 /**
  * 基础渲染选项
@@ -60,7 +63,7 @@ const BaseFontRenderConfig: IBaseFontRenderConfig = {
     strokeColor: '#b8b8b8', // 笔画颜色（字体模式下也用作文字颜色）
     radicalColor: '#3889f2', // 偏旁颜色 
     padding: 5, // 内边距
-   
+
 };
 
 
@@ -116,16 +119,17 @@ const DefaultBorderStyleConfig: IDefaultBorderStyleConfig = {
  * 
  */
 export const DEFAULT_CONFIG = {
+    // 模板信息 
     templateConfig: {
-       ...TemplateConfig 
-    }, // 模板信息
-    styleConfig: {
-        fontSize: DefaultGridConfig.fontSize,
+        ...DefaultTemplateConfig
     },
+    // 渲染配置信息
     renderConfig: {
+        // 字体渲染配置信息
         fontStyleConfig: {
             ...DefaultStrokeFontRenderConfig
         },
+        // 边框渲染配置信息
         borderStyleConfig: {
             ...DefaultBorderStyleConfig
         },

@@ -427,7 +427,7 @@ export const renderHanziForItem = (svgId: string, character: string, renderConfi
     console.error('渲染汉字出错:', error);
 
     // 降级处理：显示纯文字
-    const fallbackFontSize = _opt.fontSize || _opt.width || DEFAULT_CONFIG.styleConfig.fontSize;
+    const fallbackFontSize = _opt.fontSize || _opt.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.fontSize;
 
     container.innerHTML = `<div style="
       display: flex;
@@ -447,7 +447,8 @@ export const renderHanziForItem = (svgId: string, character: string, renderConfi
 
 /**
  * 对指定容器进行遍历渲染
- * @param ContainerId 
+ * @param ContainerId 容器ID
+ * @param renderOption 渲染配置
  */
 
 export const renderHanziInContainer = async (ContainerId: string, renderOption: any) => {
@@ -827,8 +828,8 @@ export const renderStrokeProgressInContainer = async (
       // 如果没有笔画数据或笔画数量为0，渲染空的米字格
       createEmptyGridInContainer(
         containerId,
-        fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize,
-        fontStyleConfig.height || DEFAULT_CONFIG.styleConfig.fontSize,
+        fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
+        fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
         borderStyleConfig
       );
       return;
@@ -844,8 +845,8 @@ export const renderStrokeProgressInContainer = async (
 
     // 创建SVG容器
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', (fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize).toString());
-    svg.setAttribute('height', (fontStyleConfig.height || DEFAULT_CONFIG.styleConfig.fontSize).toString());
+    svg.setAttribute('width', (fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width).toString());
+    svg.setAttribute('height', (fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height).toString());
     svg.setAttribute('class', 'T-HZ stroke-progress');
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
@@ -853,15 +854,15 @@ export const renderStrokeProgressInContainer = async (
     if (backgroundType === BACKGROUND_TYPE.DOT_GRID) {
       addGridLinesToSVG(
         svg,
-        fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize,
-        fontStyleConfig.height || DEFAULT_CONFIG.styleConfig.fontSize,
+        fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
+        fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
         borderStyleConfig.lineColor || DEFAULT_CONFIG.renderConfig.borderStyleConfig.lineColor);
     }
 
     // 创建笔画SVG并添加到容器
     const strokeSVG = createStrokeSVG(
       strokesPortion,
-      fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize,
+      fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
       {
         fillColor: fontStyleConfig.strokeColor || DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor
       }
@@ -879,8 +880,8 @@ export const renderStrokeProgressInContainer = async (
     // 出错时渲染空的米字格
     createEmptyGridInContainer(
       containerId,
-      fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize,
-      fontStyleConfig.height || DEFAULT_CONFIG.styleConfig.fontSize,
+      fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
+      fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
       borderStyleConfig,
     );
   }

@@ -1,4 +1,4 @@
-import { IFontLibrary } from '@/interface';
+import { IFontLibraryItem } from '@/interface';
 
 // 4年级 上学期 写字表
 // export const GRADE_4_UPPER_WRITING_LIST = '一二'
@@ -12,22 +12,26 @@ export const GRADE_4_UPPER_LEARNING_LIST = '盐薄屹昂鼎沸贯浩崩震霎余
 export const GRADE_4_LOWER_LEARNING_LIST = '杂篱徐疏锄剥构冠序朴素率倘附捣绘谐慰藉卜绮和谈琥珀嗡脂拭渗俯扎番埋澎湃钝描隧衍吨颅膨捷辟崭乒乓拥菌臭蔬碳癌症率疾灶鹏揽驱践着党施懈宛碑宾吉咸兆廷予肿阶趾逻政浏漫涛挤叉绣潇绽朦胧晖徜徉炫垢怯曝赤携涉晕屈渊孟甫韩愈禹锡仲龚忧虑职屏蹭稿腔殃折疙瘩侮恶毒聋啄伏哼啼凄调看嚣吭吠促颇奢侈苟譬侍窥伺肝秆俏峭哺浦沦抡涣焕俊峻扩荷刹镶浙簇臀漆蜿蜒恭勤焉卒晋絮扭姥吧塞呜哇糠栓捆绑劫毙扒尸徽谜唇尚拌倔强嘱咐忍沮吭仪蹬妨搓葵祈遗憾污屑芙蓉洛单砚乾坤役屡摧雹晕膛弥脉葬剖裸泣汹维秩酣械岗宰遣泰杖敞拘蕴蔼慷慨贤戚惧彬躁焚妖矩乖撵丫拽冲瘦硕允砌覆啸缕搂颊矢殿抚鲸恰'
 
 // 小学4年级 字库列表
-export const GRADE_4_FONT_LIBRARY: IFontLibrary[] = [
+export const GRADE_4_FONT_LIBRARY: IFontLibraryItem[] = [
     {
         name: '4年级 上学期 写字表',
+        code: 4.1,
         list: GRADE_4_UPPER_WRITING_LIST,
         select: true
     },
     {
         name: '4年级 下学期 写字表',
+        code: 4.2,
         list: GRADE_4_LOWER_WRITING_LIST
     },
     {
         name: '4年级 上学期 识字表',
+        code: 4.3,
         list: GRADE_4_UPPER_LEARNING_LIST
     },
     {
         name: '4年级 下学期 识字表',
+        code: 4.4,
         list: GRADE_4_LOWER_LEARNING_LIST
     }
 ]

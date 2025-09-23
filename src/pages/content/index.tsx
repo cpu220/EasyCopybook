@@ -4,94 +4,65 @@ import { useModel } from 'umi';
 // import { useGlobalValue, useGlobalActions } from '@/context/GlobalContext';
 
 import BaseGrid from './components/gridTemplate/baseGrid/index';
-import { renderHanziForItem,renderHanziInContainer} from '@/utils/render';
-import { DEFAULT_CONFIG } from '@/const/core/render';
-const  {  renderConfig }  = DEFAULT_CONFIG
+import { renderHanziForItem, renderHanziInContainer } from '@/utils';
 
 const ContentBox: React.FC = () => {
-    // 使用 UMI 4.x 数据流
-    const { templateInfo, updateTemplateInfo, fontList } = useModel('CONTENT');
+    // 使用 UMI 4.x 数据流，从CONTENT model中获取所有必要的配置
+    const {
+        fontLibraryItem,
+        templateConfig,
+        fontStyleConfig,
+        borderStyleConfig,
+        backgroundType,
+    } = useModel('CONTENT');
 
-    // 注意：cnchar已在应用入口(app.tsx)中初始化，业务代码无需感知
+ 
     useEffect(() => {
         console.log('ContentBox组件挂载');
-        console.log('templateInfo', templateInfo);
-    }, []); // 只在组件挂载时执行一次
+        console.log('templateInfo', templateConfig,fontStyleConfig,backgroundType);
+    }, [templateConfig,fontStyleConfig,backgroundType]);  
 
+ 
 
+    // 在组件挂载后，当DOM渲染完成时自动触发handleTransition
+    useEffect(() => { 
 
+        triggerTransition();
+    }, []); // 只在组件挂载后执行一次
+
+    const triggerTransition = async () => {
+        try {
+            // 确保DOM已经渲染完成
+            await new Promise(resolve => setTimeout(resolve, 0));
+            await handleTransition();
+        } catch (error) {
+            console.error('自动触发转换失败:', error);
+        }
+    };
     /**
      * 将指定的字体列表转换为网格数据格式
      */
-    const handleTransition = async ()=>{
-        const key =  'grid-container'
+    const handleTransition = async () => {
+        const key = 'grid-container'
         console.log('开始转换为字帖', key)
-            await renderHanziInContainer(key,renderConfig)
-        // try {
-        //     // 获取容器元素
-        //     const container = document.getElementById(key);
-        //     if (!container) {
-        //         message.error('未找到网格容器');
-        //         return;
-        //     }
-            
-        //     // 获取所有网格项
-        //     const gridItems = container.querySelectorAll('[data-font]');
-            
-        //     if (gridItems.length === 0) {
-        //         message.warning('没有找到可转换的网格项');
-        //         return;
-        //     }
-            
-        //     // 显示加载状态
-        //     message.loading('正在转换为字帖...', 0);
-            
-        //     // 遍历所有网格项，转换为汉字字帖
-        //     const promises = Array.from(gridItems).map((item, index) => {
-        //         return new Promise<void>((resolve) => {
-        //             setTimeout(() => {
-        //                 const gridItem = item as HTMLElement;
-        //                 const char = gridItem.dataset.font || '';
-                        
-        //                 if (char) {
-        //                     // 清空网格项内容
-        //                     gridItem.innerHTML = '';
-                            
-        //                     // 使用渲染函数替换每个字符
-        //                     renderHanziForItem( gridItem.id, char,{
-        //                         ...DEFAULT_CONFIG.renderConfig.fontStyleConfig,
-        //                         width: 60,
-        //                         height: 60,
-        //                         useGridBackground: true,
-        //                         useLocalData: true, 
-        //                     });
-        //                 }
-        //                 resolve();
-        //             }, index * 50); // 错开执行时间，避免性能问题
-        //         });
-        //     });
-            
-        //     // 等待所有转换完成
-        //     await Promise.all(promises);
-            
-        //     // 隐藏加载状态，显示成功消息
-        //     message.destroy();
-        //     message.success('字帖生成成功');
-            
-        // } catch (error) {
-        //     console.error('生成字帖失败:', error);
-        //     message.destroy();
-        //     message.error('生成字帖失败，请重试');
-        // }
+
+        // 合并所有必要的配置，确保渲染函数能获取到完整的配置信息
+        const finalRenderConfig = {
+            ...fontStyleConfig, 
+            borderStyleConfig,
+            backgroundType
+        };
+
+        await renderHanziInContainer(key, finalRenderConfig)
     }
-    
+
 
     return (
-        <div > 
+        <div >
             <div>
                 <Button type="primary" onClick={handleTransition}>生成字帖</Button>
             </div>
-            <BaseGrid  />
+            <BaseGrid />
         </div>
     );
 };
