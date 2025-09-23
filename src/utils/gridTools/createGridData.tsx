@@ -1,227 +1,286 @@
 /**
- * 根据配置项，常见出字帖模板的二维数组
+ * 根据配置项，生成字帖模板的二维数组
  */
 
+import { IFontItem, IDefaultTemplateConfig } from '@/interface';
 
-
-import { IFontItem,IDefaultTemplateConfig } from '@/interface';
-
-
-interface IcalculateRows{
-    str: string,
-    column: number,
-    wordsPerRow: number,
-    wordsPreCol: number,
+/**
+ * 布局策略接口 - 定义所有布局策略需要实现的方法
+ */
+export interface GridLayoutStrategy {
+  /**
+   * 计算需要的行数
+   * @param str 输入的字符串
+   * @param column 列数
+   * @returns 计算得到的行数
+   */
+  calculateRows(str: string, column: number): number;
+  
+  /**
+   * 创建字符二维数组
+   * @param str 输入的字符串
+   * @param column 列数
+   * @returns 格式化后的二维数组，每个元素包含一个字符
+   */
+  createCharArray(str: string, column: number): IFontItem[][];
 }
 
-// 暂定目前只有 1排1个字，1排column个字， 2排一个字,3排一个字,4排一个字  5种情况
-
-// 计算行数的通用方法
-function calculateRows({str, column, wordsPerRow, wordsPreCol}: IcalculateRows): number {
-    
+/**
+ * 类型1: 几排展示1个字的策略 - 一个字占据多行，每行的第一个单元格显示相同的字
+ * 这种策略适用于需要重复练习同一个汉字的情况
+ */
+export class MultiRowsOneWordStrategy implements GridLayoutStrategy {
+  private rowsPerWord: number;
+  
+  /**
+   * 构造函数
+   * @param rowsPerWord 每个字占据的行数
+   */
+  constructor(rowsPerWord: number) {
+    this.rowsPerWord = rowsPerWord;
+  }
+  
+  /**
+   * 计算行数 - 总行数 = 字符串长度 * 每个字占据的行数
+   * @param str 输入的字符串
+   * @param column 列数（此策略不使用）
+   * @returns 计算得到的行数
+   */
+  calculateRows(str: string, column: number): number {
+    return Math.ceil(str.length * this.rowsPerWord);
+  }
+  
+  /**
+   * 创建字符数组 - 每个字占据多行，每行的第一个单元格显示相同的字
+   * @param str 输入的字符串
+   * @param column 列数
+   * @returns 二维数组，每个字占据多行
+   */
+  createCharArray(str: string, column: number): IFontItem[][] {
+    const result: IFontItem[][] = [];
     const strLength = str.length;
-
-    // 1排1个字：每个字单独占一行
-    if (wordsPerRow === 1 && wordsPreCol === 1) {
-        return Math.ceil(strLength / 1);
+    
+    for (let i = 0; i < strLength; i++) {
+      // 为每个字生成rowsPerWord排
+      for (let rowIndex = 0; rowIndex < this.rowsPerWord; rowIndex++) {
+        const rowItem: IFontItem[] = [{ char: str[i] }];
+        // 补齐整行的其余格子为空
+        for (let j = 1; j < column; j++) {
+          rowItem.push({ char: '' });
+        }
+        result.push(rowItem);
+      }
     }
     
-    // 1排column个字：所有格子都显示对应的汉字
-    if (wordsPerRow === 1 && wordsPreCol === column) {
-        return Math.ceil(strLength / column);
-    }
-    
-    // 2排一个字：每个字占2行
-    if (wordsPerRow === 2 && wordsPreCol === 1) {
-        return Math.ceil(strLength * 2 / 1);
-    }
-    
-    // 3排一个字：每个字占3行
-    if (wordsPerRow === 3 && wordsPreCol === 1) {
-        return Math.ceil(strLength * 3 / 1);
-    }
-    
-    // 4排一个字：每个字占4行
-    if (wordsPerRow === 4 && wordsPreCol === 1) {
-        return Math.ceil(strLength * 4 / 1);
-    }
-    
-    // 一排2个字：每排显示2个汉字，中间有空格
-    if (wordsPerRow === 1 && wordsPreCol === 2) {
-        return Math.ceil(strLength / 2);
-    }
-    
-    // 默认情况
-    return Math.ceil(strLength / column);
+    return result;
+  }
 }
 
-
-
-
 /**
- * 格式化字符信息魏表格所需要的二维数组
- * @param str 输入的字符串
- * @param column 列数
- * @returns 二维数组，每个元素是一个字符
+ * 类型2: 一排展示n个字的策略 - 每行显示n个汉字，n < column，汉字之间有空格
+ * 这种策略适用于需要在一行中展示较少汉字，留有更多空白空间的情况
  */
-export const formatGridData = (str: string, templateConfig: IDefaultTemplateConfig) => {
-    const { column, wordsPerRow, wordsPreCol } = templateConfig
-    // step。1  计算行数
-    // const row = calculateRows(str.length, column)
-    // step.2  创建字符数组
-    const charArr = createCharArray(str,  templateConfig)
-    //  返回格式化后的二维数组
-    return charArr
+export class FewWordsPerRowStrategy implements GridLayoutStrategy {
+  private wordsPerRow: number;
+  
+  /**
+   * 构造函数
+   * @param wordsPerRow 每行显示的汉字数量
+   */
+  constructor(wordsPerRow: number) {
+    this.wordsPerRow = wordsPerRow;
+  }
+  
+  /**
+   * 计算行数 - 总行数 = 字符串长度 / 每行字数，向上取整
+   * @param str 输入的字符串
+   * @param column 列数（此策略不使用）
+   * @returns 计算得到的行数
+   */
+  calculateRows(str: string, column: number): number {
+    return Math.ceil(str.length / this.wordsPerRow);
+  }
+  
+  /**
+   * 创建字符数组 - 每行显示固定数量的汉字，汉字之间平均分布空格
+   * @param str 输入的字符串
+   * @param column 列数
+   * @returns 二维数组，每行显示固定数量的汉字，汉字之间有空格
+   */
+  createCharArray(str: string, column: number): IFontItem[][] {
+    const result: IFontItem[][] = [];
+    const strLength = str.length;
+    
+    // 每行的汉字数量
+    const wordsCount = this.wordsPerRow;
+    
+    if (wordsCount === 2) {
+      // 特殊处理一排2个字的情况（根据之前的实现）
+      const halfColumn = Math.floor(column / 2); // 计算每侧的格子数
+      
+      for (let i = 0; i < strLength; i += 2) {
+        const rowItem: IFontItem[] = [];
+        
+        // 第一个字
+        if (i < strLength) {
+          rowItem.push({ char: str[i] });
+        } else {
+          rowItem.push({ char: '' });
+        }
+        
+        // 添加第一个字后面的空格
+        for (let j = 1; j < halfColumn; j++) {
+          rowItem.push({ char: '' });
+        }
+        
+        // 第二个字
+        if (i + 1 < strLength) {
+          rowItem.push({ char: str[i + 1] });
+        } else {
+          rowItem.push({ char: '' });
+        }
+        
+        // 添加第二个字后面的空格（补齐整行）
+        for (let j = rowItem.length; j < column; j++) {
+          rowItem.push({ char: '' });
+        }
+        
+        result.push(rowItem);
+      }
+    } else {
+      // 通用的一排n个字的实现（n>2）
+      // 计算每个汉字之间的空格数量
+      const spacesPerGap = Math.floor(column / (wordsCount + 1));
+      
+      for (let i = 0; i < strLength; i += wordsCount) {
+        const rowItem: IFontItem[] = [];
+        
+        // 行首空格
+        for (let j = 0; j < spacesPerGap; j++) {
+          rowItem.push({ char: '' });
+        }
+        
+        // 填充汉字和它们之间的空格
+        for (let k = 0; k < wordsCount; k++) {
+          const charIndex = i + k;
+          if (charIndex < strLength) {
+            rowItem.push({ char: str[charIndex] });
+          } else {
+            rowItem.push({ char: '' });
+          }
+          
+          // 在每个汉字后添加空格（除了最后一个）
+          if (k < wordsCount - 1) {
+            for (let j = 0; j < spacesPerGap; j++) {
+              rowItem.push({ char: '' });
+            }
+          }
+        }
+        
+        // 补齐整行
+        for (let j = rowItem.length; j < column; j++) {
+          rowItem.push({ char: '' });
+        }
+        
+        result.push(rowItem);
+      }
+    }
+    
+    return result;
+  }
 }
 
+/**
+ * 类型3: 一排展示column个字的策略 - 所有格子都显示对应的汉字，排满一行
+ * 这种策略适用于需要在有限空间内展示最多汉字的情况
+ */
+export class FullRowWordsStrategy implements GridLayoutStrategy {
+  /**
+   * 计算行数 - 总行数 = 字符串长度 / 列数，向上取整
+   * @param str 输入的字符串
+   * @param column 列数
+   * @returns 计算得到的行数
+   */
+  calculateRows(str: string, column: number): number {
+    return Math.ceil(str.length / column);
+  }
+  
+  /**
+   * 创建字符数组 - 按行列顺序填充所有字符，没有额外空格
+   * @param str 输入的字符串
+   * @param column 列数
+   * @returns 二维数组，按顺序填充所有字符
+   */
+  createCharArray(str: string, column: number): IFontItem[][] {
+    const result: IFontItem[][] = [];
+    const strLength = str.length;
+    const rows = this.calculateRows(str, column);
+    
+    for (let i = 0; i < rows; i++) {
+      const rowItem: IFontItem[] = [];
+      for (let j = 0; j < column; j++) {
+        const index = i * column + j;
+        rowItem.push({
+          char: index < strLength ? str[index] : ''
+        });
+      }
+      result.push(rowItem);
+    }
+    
+    return result;
+  }
+}
 
 /**
- * 构建二维数组的方法
+ * 布局策略工厂类 - 根据配置参数返回对应的布局策略实例
+ */
+export class GridLayoutStrategyFactory {
+  /**
+   * 获取布局策略实例
+   * @param config 配置参数
+   * @param config.wordsPerRow 每行的字数
+   * @param config.wordsPreCol 每列的字数
+   * @param config.column 总列数
+   * @returns 对应的布局策略实例
+   */
+  static getStrategy(config: { wordsPerRow: number; wordsPreCol: number; column: number }): GridLayoutStrategy {
+    const { wordsPerRow, wordsPreCol, column } = config;
+    
+    // 类型1: 几排展示1个字的策略 (wordsPreCol === 1)
+    if (wordsPreCol === 1 && wordsPerRow >= 1) {
+      // wordsPerRow 在这里表示每个字占据的行数
+      return new MultiRowsOneWordStrategy(wordsPerRow);
+    }
+    
+    // 类型2: 一排展示n个字的策略 (wordsPerRow === 1 且 wordsPreCol < column)
+    if (wordsPerRow === 1 && wordsPreCol > 0 && wordsPreCol < column) {
+      // wordsPreCol 在这里表示每行显示的字数
+      return new FewWordsPerRowStrategy(wordsPreCol);
+    }
+    
+    // 类型3: 一排展示column个字的策略 (wordsPerRow === 1 且 wordsPreCol === column)
+    if (wordsPerRow === 1 && wordsPreCol === column) {
+      return new FullRowWordsStrategy();
+    }
+    
+    // 默认策略: 一排展示column个字
+    return new FullRowWordsStrategy();
+  }
+}
+
+/**
+ * 格式化字符信息为表格所需的二维数组
  * @param str 输入的字符串
  * @param templateConfig 模板配置
  * @returns 二维数组，每个元素是一个字符
  */
-function createCharArray(str: string, templateConfig: IDefaultTemplateConfig): IFontItem[][] {
-    
-    const { column, wordsPerRow, wordsPreCol } = templateConfig;
-    
-    const result: IFontItem[][] = [];
-    const strLength = str.length;
-
-    // 1排1个字：一排只有首格展示汉字，其他全是空格
-    if (wordsPerRow === 1 && wordsPreCol === 1) {
-        for (let i = 0; i < strLength; i++) {
-            const rowItem: IFontItem[] = [];
-            // 首格显示汉字，其他显示空字符串
-            rowItem.push({ char: str[i] });
-            for (let j = 1; j < column; j++) {
-                rowItem.push({ char: '' });
-            }
-            result.push(rowItem);
-        }
-    }
-    
-    // 1排column个字：所有格子都显示对应的汉字
-    else if (wordsPerRow === 1 && wordsPreCol === column) {
-        const rows = Math.ceil(strLength / column);
-        for (let i = 0; i < rows; i++) {
-            const rowItem: IFontItem[] = [];
-            for (let j = 0; j < column; j++) {
-                const index = i * column + j;
-                rowItem.push({
-                    char: index < strLength ? str[index] : ''
-                });
-            }
-            result.push(rowItem);
-        }
-    }
-    
-    // 2排一个字：2排首格都是同一个字，后面都是空格
-    else if (wordsPerRow === 2 && wordsPreCol === 1) {
-        for (let i = 0; i < strLength; i++) {
-            // 第一排
-            const row1: IFontItem[] = [{ char: str[i] }];
-            for (let j = 1; j < column; j++) {
-                row1.push({ char: '' });
-            }
-            result.push(row1);
-            
-            // 第二排
-            const row2: IFontItem[] = [{ char: str[i] }];
-            for (let j = 1; j < column; j++) {
-                row2.push({ char: '' });
-            }
-            result.push(row2);
-        }
-    }
-    
-    // 3排一个字：3排首格都是同一个字，后面都是空格
-    else if (wordsPerRow === 3 && wordsPreCol === 1) {
-        for (let i = 0; i < strLength; i++) {
-            // 生成3排
-            for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
-                const rowItem: IFontItem[] = [{ char: str[i] }];
-                for (let j = 1; j < column; j++) {
-                    rowItem.push({ char: '' });
-                }
-                result.push(rowItem);
-            }
-        }
-    }
-    
-    // 4排一个字：4排首格都是同一个字，后面都是空格
-    else if (wordsPerRow === 4 && wordsPreCol === 1) {
-        for (let i = 0; i < strLength; i++) {
-            // 生成4排
-            for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
-                const rowItem: IFontItem[] = [{ char: str[i] }];
-                for (let j = 1; j < column; j++) {
-                    rowItem.push({ char: '' });
-                }
-                result.push(rowItem);
-            }
-        }
-    }
-    
-    // 一排2个字：2个字分一排，第一个格子展示对应的汉字，后面跟column/2 -1 个空格，第 column/2 +1 展示第2个要展示的汉字，后面跟column/2 -1 个空格
-    else if (wordsPerRow === 1 && wordsPreCol === 2) {
-        const halfColumn = Math.floor(column / 2);
-        for (let i = 0; i < strLength; i += 2) {
-            const rowItem: IFontItem[] = [];
-            
-            // 第一个字
-            if (i < strLength) {
-                rowItem.push({ char: str[i] });
-            } else {
-                rowItem.push({ char: '' });
-            }
-            
-            // 添加第一个字后面的空格
-            for (let j = 1; j < halfColumn; j++) {
-                rowItem.push({ char: '' });
-            }
-            
-            // 第二个字
-            if (i + 1 < strLength) {
-                rowItem.push({ char: str[i + 1] });
-            } else {
-                rowItem.push({ char: '' });
-            }
-            
-            // 添加第二个字后面的空格（补齐整行）
-            for (let j = rowItem.length; j < column; j++) {
-                rowItem.push({ char: '' });
-            }
-            
-            result.push(rowItem);
-        }
-    }
-    
-    // 默认情况
-    else {
-        const rows = calculateRows({
-            str, 
-            column,
-            wordsPerRow, 
-            wordsPreCol
-        });
-        
-        for (let i = 0; i < rows; i++) {
-            const start = i * column;
-            const end = Math.min(start + column, str.length);
-            const rowItem: IFontItem[] = [];
-            
-            for (let j = 0; j < column; j++) {
-                const index = start + j;
-                rowItem.push({
-                    char: index < strLength ? str[index] : ''
-                });
-            }
-            
-            result.push(rowItem);
-        }
-    }
-
-    return result;
+export const formatGridData = (str: string, templateConfig: IDefaultTemplateConfig) => {
+  const { column, wordsPerRow, wordsPreCol } = templateConfig
+  // 获取对应的布局策略
+  const strategy = GridLayoutStrategyFactory.getStrategy({ wordsPerRow, wordsPreCol, column });
+  // 创建字符数组
+  const charArr = strategy.createCharArray(str, column);
+  // 返回格式化后的二维数组
+  return charArr;
 }
 
