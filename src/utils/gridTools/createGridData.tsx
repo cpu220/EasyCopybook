@@ -46,6 +46,11 @@ function calculateRows({str, column, wordsPerRow, wordsPreCol}: IcalculateRows):
         return Math.ceil(strLength * 4 / 1);
     }
     
+    // 一排2个字：每排显示2个汉字，中间有空格
+    if (wordsPerRow === 1 && wordsPreCol === 2) {
+        return Math.ceil(strLength / 2);
+    }
+    
     // 默认情况
     return Math.ceil(strLength / column);
 }
@@ -155,6 +160,40 @@ function createCharArray(str: string, templateConfig: IDefaultTemplateConfig): I
                 }
                 result.push(rowItem);
             }
+        }
+    }
+    
+    // 一排2个字：2个字分一排，第一个格子展示对应的汉字，后面跟column/2 -1 个空格，第 column/2 +1 展示第2个要展示的汉字，后面跟column/2 -1 个空格
+    else if (wordsPerRow === 1 && wordsPreCol === 2) {
+        const halfColumn = Math.floor(column / 2);
+        for (let i = 0; i < strLength; i += 2) {
+            const rowItem: IFontItem[] = [];
+            
+            // 第一个字
+            if (i < strLength) {
+                rowItem.push({ char: str[i] });
+            } else {
+                rowItem.push({ char: '' });
+            }
+            
+            // 添加第一个字后面的空格
+            for (let j = 1; j < halfColumn; j++) {
+                rowItem.push({ char: '' });
+            }
+            
+            // 第二个字
+            if (i + 1 < strLength) {
+                rowItem.push({ char: str[i + 1] });
+            } else {
+                rowItem.push({ char: '' });
+            }
+            
+            // 添加第二个字后面的空格（补齐整行）
+            for (let j = rowItem.length; j < column; j++) {
+                rowItem.push({ char: '' });
+            }
+            
+            result.push(rowItem);
         }
     }
     

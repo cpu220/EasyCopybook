@@ -6,7 +6,7 @@
 import HanziWriter from 'hanzi-writer';
 import { message } from 'antd'
 import { DEFAULT_CONFIG, BACKGROUND_TYPE } from '@/const';
-import { IDefaultBorderStyleConfig, IDefaultStrokeFontRenderConfig } from '@/interface'
+import { IDefaultBorderStyleConfig, IRenderConfig } from '@/interface'
 
 // 使用统一的默认配置选项
 const defaultOptions = DEFAULT_CONFIG.renderConfig.fontStyleConfig;
@@ -78,10 +78,10 @@ export const safelyClearContainer = (container: HTMLElement | null): boolean => 
  * 创建米字格SVG元素,然后再进行米字格的绘制
  * @param width 宽度
  * @param height 高度
- * @param options 额外选项
+ * @param borderStyleConfig 额外选项
  * @returns SVG元素
  */
-export const createGridSVG = (width: number, height: number, options: IDefaultBorderStyleConfig): SVGElement => {
+export const createGridSVG = (width: number, height: number, borderStyleConfig: IDefaultBorderStyleConfig): SVGElement => {
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('width', width.toString());
@@ -92,7 +92,7 @@ export const createGridSVG = (width: number, height: number, options: IDefaultBo
   // 为网格SVG添加统一的T-HZ类名
   svg.setAttribute('class', 'T-HZ');
 
-  addGridLinesToSVG(svg, width, height, options);
+  addGridLinesToSVG(svg, width, height, borderStyleConfig);
 
   return svg;
 };
@@ -151,14 +151,13 @@ export const createMultiColorStrokeSVG = (strokePaths: string[], size: number, c
  * @param height 高度
  * @param options 选项
  */
-export const addGridLinesToSVG = (svg: SVGElement, width: number, height: number, options: IDefaultBorderStyleConfig): void => {
+export const addGridLinesToSVG = (svg: SVGElement, width: number, height: number, borderStyleConfig: IDefaultBorderStyleConfig): void => {
   const {
-    lineColor, borderColor,
-    // strokeWidth = Math.max(0.5, Math.min(1, width / 100)),
+    lineColor, borderColor, 
     lineWidth,
     useDashedLines = true,
     showBorder = true
-  } = options;
+  } = borderStyleConfig;
 
   const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   group.setAttribute('class', 'grid-lines');
@@ -455,12 +454,12 @@ export const renderHanziForItem = (svgId: string, character: string, renderConfi
 /**
  * 对指定容器进行遍历渲染
  * @param ContainerId 容器ID
- * @param renderOption 渲染配置
+ * @param renderConfig 渲染配置
  */
 
-export const renderHanziInContainer = async (ContainerId: string, renderOption: any) => {
+export const renderHanziInContainer = async (ContainerId: string, renderConfig: IRenderConfig) => {
 
-  const { borderStyleConfig, fontStyleConfig, backgroundType } = renderOption
+  const { borderStyleConfig, fontStyleConfig, backgroundType } = renderConfig
 
   // Steps.1 获取容器
   const container = document.getElementById(ContainerId);
@@ -488,10 +487,10 @@ export const renderHanziInContainer = async (ContainerId: string, renderOption: 
           gridItem.innerHTML = '';
 
           // 使用渲染函数替换每个字符
-          renderHanziForItem(gridItem.id, char, renderOption);
+          renderHanziForItem(gridItem.id, char, renderConfig);
         } else {
           console.log('字符为空,渲染为米字格', char)
-          const { width, height } = renderOption.fontStyleConfig
+          const { width, height } = renderConfig.fontStyleConfig
           createEmptyGridInContainer(
             gridItem.id, width, height, borderStyleConfig)
         }
