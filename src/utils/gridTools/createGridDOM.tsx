@@ -6,6 +6,7 @@
 
 import { IFontItem, IDefaultTemplateConfig } from '@/interface';
 import { formatGridData } from './createGridData';
+import TipsContainer from '@/pages/content/components/gridTemplate/tipsContainer';
 import gridStyles from '@/pages/content/components/gridTemplate/baseGrid/index.less'
 
 
@@ -64,27 +65,20 @@ const createGridRow = ({ arr, row, templateConfig, char }: {
     const key = `grid-row-${row}`
 
     let tipDOM = null;
-    let pinyinDOM = null
-    let strokeOrderDOM = null
-    if (pinyin) {
-        // pinyinDOM = getPinYin()
-        pinyinDOM = <div className={gridStyles['grid-row-pinyin']}>pinyin</div>
-    }
 
-    if (showStrokeOrder) {
-        // strokeOrderDOM = getStrokeOrder(char)
-        strokeOrderDOM = <div className={gridStyles['grid-row-storke']}>笔画顺序</div>
-    }
-
-
-    if(pinyin || showStrokeOrder){
+    // 使用TipsContainer组件封装拼音和笔画顺序展示
+    if (pinyin || showStrokeOrder) {
         tipDOM = (
-            <div id={`${key}-tips-container`} className={rowTipClassName}>
-                {pinyinDOM}
-                {strokeOrderDOM}
-            </div>
-        )
-    } 
+            <TipsContainer
+                id={`${key}-tips-container`}
+                char={char}
+                showPinyin={pinyin}
+                showStrokeOrder={showStrokeOrder}
+                pinyinConfig={{ withTone: true }}
+                strokeOrderConfig={{ className: gridStyles['grid-row-storke'] }}
+            />
+        );
+    }
     
 
     return (
@@ -97,6 +91,8 @@ const createGridRow = ({ arr, row, templateConfig, char }: {
         </div>
     )
 }
+
+
 
 /**
  * 创建网格 网格项数组

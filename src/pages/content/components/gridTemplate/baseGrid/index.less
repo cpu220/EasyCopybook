@@ -1,6 +1,8 @@
 @import "../../color.less";
 
-.grid-container {}
+.grid-container {
+    border:solid 1px #000;
+}
 
 .grid-row {
     padding: 10px;
@@ -43,24 +45,4 @@
         margin-right: calc(12px * @charsheet-font-scale);
     }
 }
-
-
-
-
-.grid-row-tip-container {
-    border: solid 1px #000;
-    display: flex;
-
-    .grid-row-pinyin {
-        border: solid 1px #0ff;
-        display: flex;
-        justify-content: center;
-        width:calc(60px * @charsheet-font-scale);
-    }
-
-    .grid-row-storke {
-        border: solid 1px #ff0;
-        display: flex;
-        justify-content: center;
-    }
-}
+ 

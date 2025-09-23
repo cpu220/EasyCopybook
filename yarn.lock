@@ -3597,6 +3597,25 @@ clone-regexp@^2.1.0:
   dependencies:
     is-regexp "^2.0.0"
 
+cnchar-types@^3.2.6:
+  version "3.2.6"
+  resolved "https://registry.npmjs.org/cnchar-types/-/cnchar-types-3.2.6.tgz"
+  integrity sha512-LGU2ss7KcsI1Psme73+jffUX0ZDuChr6P9Rj2j8lynJHStklNpoC/+kheKSSUcXQ1u2KNvZt1Shs/5efcihHkg==
+
+cnchar-words@^3.2.6:
+  version "3.2.6"
+  resolved "https://registry.npmjs.org/cnchar-words/-/cnchar-words-3.2.6.tgz"
+  integrity sha512-g0FPLbaUaWxvUH/L2dHsQiWqvghwtfRWP+yCGDLWijza2MT6ET8GP8+dNbqYVmnSU02yUTlR7X1sUY5pckzL0Q==
+  dependencies:
+    cnchar-types "^3.2.6"
+
+cnchar@^3.2.6:
+  version "3.2.6"
+  resolved "https://registry.npmjs.org/cnchar/-/cnchar-3.2.6.tgz"
+  integrity sha512-7Up5ALAkoOTAHlRMN0B7VgrrRsp6+trgFV0M7xSsZ0TwnnBfW68gXClcE9Oz8sTOEu+zqGOZjBhlHNzPIBckDA==
+  dependencies:
+    cnchar-types "^3.2.6"
+
 color-convert@^1.9.0:
   version "1.9.3"
   resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
