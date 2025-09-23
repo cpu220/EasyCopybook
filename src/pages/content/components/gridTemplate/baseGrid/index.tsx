@@ -6,7 +6,8 @@
 import React, { useEffect, useRef } from 'react'
 import { useModel } from 'umi';
 import { createGrid } from '@/utils'
-import { renderHanziInContainer } from '@/utils/render'
+import { renderHanziInContainer } from '@/utils'
+import { DEFAULT_CONFIG } from '@/const'
 import styles from './index.less'
 
 
@@ -42,7 +43,8 @@ const BaseGrid: React.FC = () => {
 
     // 安全处理字库列表为空的情况
     const safeFontList = fontLibraryItem?.list || '';
-    const safeColumnCount = templateConfig?.column || 10;
+    // const safeColumnCount = templateConfig?.column || 10;
+    const safeTemplateConfig = templateConfig ||  DEFAULT_CONFIG.templateConfig
 
     return (
         <div
@@ -50,7 +52,7 @@ const BaseGrid: React.FC = () => {
             ref={containerRef}
             className={styles['grid-container']}
         >
-            {createGrid(safeFontList, safeColumnCount)}
+            {createGrid(safeFontList, safeTemplateConfig)}
         </div>
     )
 }

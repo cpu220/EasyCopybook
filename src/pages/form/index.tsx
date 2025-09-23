@@ -3,35 +3,53 @@
  * 用于配置字帖的字库选择和渲染参数
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Form, Input, Select, InputNumber, ColorPicker, Button, Card, Space, message } from 'antd';
 import type { Color } from 'antd/es/color-picker';
 import { useModel } from 'umi';
 import { FONT_LIBRARY } from '@/const';
-import {  clearStringForLibrary } from '@/utils'
+import { clearStringForLibrary } from '@/utils'
+
+const FormItem = Form.Item;
 
 const FormBox: React.FC = (): React.ReactNode => {
   const [form] = Form.useForm();
 
+
+
+
   // 使用UMI的model获取状态和操作方法
   const {
     fontLibraryItem,
+    templateConfig,
 
     fontStyleConfig,
-
+    updateTemplateConfig,
     updateFontStyleConfig,
     updateFontLibraryItem
 
   } = useModel('CONTENT');
 
+  // 一排几个字
+  const [wordsPreCol, setWordsPreCol] = useState(templateConfig.wordsPreCol);
+  // 每个字占几行
+  const [wordsPerRow, setWordsPerRow] = useState(templateConfig.wordsPerRow);
+
+
+
   // 初始化表单默认值
   useEffect(() => {
+    const { wordsPerRow, wordsPreCol } = templateConfig;
+
+
+
     form.setFieldsValue({
       fontLibrary: fontLibraryItem?.code || FONT_LIBRARY[0].code,
       diyFontLibrary: fontLibraryItem.list || '',
       // fontSize: fontStyleConfig.fontSize,
       strokeColor: fontStyleConfig.strokeColor,
-      radicalColor: fontStyleConfig.radicalColor
+      radicalColor: fontStyleConfig.radicalColor,
+      wordsPreColAndRow: `${wordsPerRow}x${wordsPreCol}`,
     });
   }, [form, fontLibraryItem, fontStyleConfig]);
 
@@ -44,8 +62,8 @@ const FormBox: React.FC = (): React.ReactNode => {
        * 清除字库中的非法字符
        */
       const _diyFontLibrary = clearStringForLibrary(values.diyFontLibrary);
-     
-      
+
+
       // 1. 更新字库列表
       const selectedFontList = FONT_LIBRARY.find(lib => lib.code === values.fontLibrary) || FONT_LIBRARY[0];
       updateFontLibraryItem({
@@ -60,6 +78,12 @@ const FormBox: React.FC = (): React.ReactNode => {
         radicalColor: values.radicalColor
       });
 
+      // 3. 更新布局配置相关状态
+      updateTemplateConfig({
+        wordsPerRow,
+        wordsPreCol
+      });
+
       message.success('配置已保存，字帖将重新渲染');
     } catch (error) {
       console.error('表单验证失败:', error);
@@ -67,18 +91,28 @@ const FormBox: React.FC = (): React.ReactNode => {
     }
   };
 
- const handleChangeFontLibrary = (val: string)=>{
-  const selectedFontList = FONT_LIBRARY.find((lib) => String(lib.code) === String(val)) || FONT_LIBRARY[0];
-  // updateFontLibraryItem({
-  //   ...selectedFontList,
-  //   list: ''
-  // })
-   form.setFieldsValue({
-    fontLibrary: selectedFontList.code,
-    diyFontLibrary: selectedFontList.list || ''
-   })
-  
- }
+  /**
+   * 字库选择改变时的处理函数
+   * @param val 字库code
+   */
+  const handleChangeFontLibrary = (val: string) => {
+    const selectedFontList = FONT_LIBRARY.find((lib) => String(lib.code) === String(val)) || FONT_LIBRARY[0];
+    // updateFontLibraryItem({
+    //   ...selectedFontList,
+    //   list: ''
+    // })
+    form.setFieldsValue({
+      fontLibrary: selectedFontList.code,
+      diyFontLibrary: selectedFontList.list || ''
+    })
+ 
+  }
+
+  const handleChangeWordsPreColAndRow = (val: string) => {
+    const [wordsPerRow, wordsPreCol] = val.split('x').map(Number);
+    setWordsPerRow(wordsPerRow);
+    setWordsPreCol(wordsPreCol);
+  }
 
   return (
     <div style={{ padding: '16px' }}>
@@ -87,7 +121,7 @@ const FormBox: React.FC = (): React.ReactNode => {
           form={form}
           layout="vertical">
           {/* 字库选择 */}
-          <Form.Item
+          <FormItem
             label="字库选择"
             name="fontLibrary"
             rules={[{ required: true, message: '请选择字库' }]}
@@ -99,18 +133,18 @@ const FormBox: React.FC = (): React.ReactNode => {
                 </Select.Option>
               ))}
             </Select>
-          </Form.Item>
-          <Form.Item
+          </FormItem>
+          <FormItem
             // label="字库选择"
             name="diyFontLibrary"
           // rules={[{ required: true, message: '请选择字库' }]}
           >
             <Input.TextArea rows={4} />
-          </Form.Item>
+          </FormItem>
 
 
           {/* 字体大小 */}
-          {/* <Form.Item
+          {/* <FormItem
             label="字体大小"
             name="fontSize"
             rules={[
@@ -119,7 +153,7 @@ const FormBox: React.FC = (): React.ReactNode => {
             ]}
           >
             <InputNumber min={10} max={200} style={{ width: '100%' }} />
-          </Form.Item> */}
+          </FormItem> */}
 
 
 
@@ -127,36 +161,56 @@ const FormBox: React.FC = (): React.ReactNode => {
           <Row>
             <Col span={12}>
               {/* 偏旁颜色 */}
-              <Form.Item
+              <FormItem
                 label="偏旁颜色"
                 name="radicalColor"
                 rules={[{ required: true, message: '请选择偏旁颜色' }]}
                 getValueFromEvent={(color: Color) => color.toHexString()}
               >
                 <ColorPicker />
-              </Form.Item>
+              </FormItem>
             </Col>
             <Col span={12}>
               {/* 笔画颜色 */}
-              <Form.Item
+              <FormItem
                 label="笔画颜色"
                 name="strokeColor"
                 rules={[{ required: true, message: '请选择笔画颜色' }]}
                 getValueFromEvent={(color: Color) => color.toHexString()}
               >
                 <ColorPicker />
-              </Form.Item>
+              </FormItem>
             </Col>
           </Row>
 
+          <FormItem
+            label="布局"
+            name="wordsPreColAndRow"
+          >
+            <Select
+              onChange = {handleChangeWordsPreColAndRow}
+              key={`${wordsPerRow}x${wordsPreCol}`}
+              value={`${wordsPerRow}x${wordsPreCol}`}
+              options={[{
+                label: '1排 1个字',
+                value: '1x1'
+              }, {
+                label: `1排 ${templateConfig.column}个字`,
+                value: `1x${templateConfig.column}`
+              }, {
+                label: '2排1个字',
+                value: '2x1'
+              }]} />
+          </FormItem>
+
 
           {/* 提交和重置按钮 */}
-          <Form.Item >
+          <FormItem >
 
             <Button type="primary" block onClick={handleSubmit}>
               确定
             </Button>
-          </Form.Item>
+          </FormItem>
         </Form>
       </Card>
     </div>

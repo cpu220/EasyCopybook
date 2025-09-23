@@ -15,7 +15,7 @@ const DefaultGridConfig = {
     defaultCol: 10
 };
 
-const CharsheetColors = {
+const DefaultCharsheetColors = {
     BORDER_COLOR: '#ddd',
     GRID_COLOR: '#ddd'
 } as const;
@@ -38,10 +38,7 @@ export const enum BACKGROUND_TYPE {
     DOT_GRID = 'dotGrid', // 米字格
     SQUARE_GRID = 'squareGrid', // 田字格
 }
-
-export const enum LAYOUT_TYPE {
-
-}
+ 
 
 /**
  * 模版信息
@@ -50,7 +47,7 @@ export const enum LAYOUT_TYPE {
 const DefaultTemplateConfig = {
     column: DefaultGridConfig.defaultCol,
     wordsPerRow: 1, // 每个字占几行
-    wordsPreCol: 10, // 一行几个字 
+    wordsPreCol: 1, // 一行几个字 
 }
 /**
  * 基础渲染选项
@@ -105,8 +102,8 @@ const DefaultBorderStyleConfig: IDefaultBorderStyleConfig = {
     useDashedLines: true,  // 是否使用虚线边框
     backgroundColor: 'none', // 边框背景颜色
     lineWidth: 1, // 边框线宽
-    lineColor: CharsheetColors.GRID_COLOR, // 线条颜色 '#ddd', 
-    borderColor: CharsheetColors.BORDER_COLOR, // 边框颜色 '#ccc',
+    lineColor: DefaultCharsheetColors.GRID_COLOR, // 线条颜色 '#ddd', 
+    borderColor: DefaultCharsheetColors.BORDER_COLOR, // 边框颜色 '#ccc',
     borderDash: false, // 是否使用虚线边框 
 }
 

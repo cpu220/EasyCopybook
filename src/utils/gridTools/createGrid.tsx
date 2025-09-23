@@ -108,10 +108,10 @@ const createGridRow = (arr: IFontItem[], row: number) => {
      * 创建网格 网格项数组
      * @returns 
      */
-export const createGrid = (list: string, column: number) => {
+export const createGrid = (list: string, templateConfig: any) => {
 
-    const arr = formatGridData(list, column)
-
+    const arr = formatGridData(list, templateConfig.column)
+        
     const result = []
 
     for (let y = 0; y < arr.length; y++) {
