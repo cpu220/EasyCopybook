@@ -1,4 +1,4 @@
-export interface IDefaultBorderStyle {
+export interface IDefaultBorderStyleConfig {
     showBorder: boolean;
     useDashedLines: boolean;
     backgroundColor: string;
@@ -8,20 +8,17 @@ export interface IDefaultBorderStyle {
     borderDash: boolean;
 }
 
-export interface IBaseFontRenderOptions {
+export interface IBaseFontRenderConfig {
     width: number;
     height: number;
     fontSize: number;
     strokeWidth: number;
     strokeColor: string;
-    radicalColor: string;
-    useGridBackground: boolean;
-    gridColor: string;
+    radicalColor: string; 
     padding: number;
-    useLocalData: boolean;
 }
 
-export interface IStrokeFontRenderOptions extends IBaseFontRenderOptions {
+export interface IDefaultStrokeFontRenderConfig extends IBaseFontRenderConfig {
     renderMode: string;
     showOutline: boolean;
     radicalColor: string;

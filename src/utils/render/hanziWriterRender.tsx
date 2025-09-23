@@ -6,10 +6,10 @@
 import HanziWriter from 'hanzi-writer';
 import { message } from 'antd'
 import { DEFAULT_CONFIG, BACKGROUND_TYPE } from '@/const';
-import { IDefaultBorderStyle, IStrokeFontRenderOptions } from '@/interface'
+import { IDefaultBorderStyleConfig, IDefaultStrokeFontRenderConfig } from '@/interface'
 
 // 使用统一的默认配置选项
-const defaultOptions = DEFAULT_CONFIG.renderConfig.fontStyle;
+const defaultOptions = DEFAULT_CONFIG.renderConfig.fontStyleConfig;
 
 
 // 本地字库数据缓存开关
@@ -78,11 +78,10 @@ export const safelyClearContainer = (container: HTMLElement | null): boolean => 
  * 创建米字格SVG元素,然后再进行米字格的绘制
  * @param width 宽度
  * @param height 高度
- * @param gridColor 网格颜色
  * @param options 额外选项
  * @returns SVG元素
  */
-export const createGridSVG = (width: number, height: number, options: IDefaultBorderStyle): SVGElement => {
+export const createGridSVG = (width: number, height: number, options: IDefaultBorderStyleConfig): SVGElement => {
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('width', width.toString());
@@ -135,7 +134,7 @@ export const createMultiColorStrokeSVG = (strokePaths: string[], size: number, c
       strokeColor = colors[index];
     } else {
       // 超出颜色数组范围，使用默认填充颜色
-      strokeColor = DEFAULT_CONFIG.renderConfig.fontStyle.strokeColor;
+      strokeColor = DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor;
     }
 
     path.style.fill = strokeColor;
@@ -150,10 +149,9 @@ export const createMultiColorStrokeSVG = (strokePaths: string[], size: number, c
  * @param svg SVG元素
  * @param width 宽度
  * @param height 高度
- * @param gridColor 网格颜色
  * @param options 选项
  */
-export const addGridLinesToSVG = (svg: SVGElement, width: number, height: number, options: IDefaultBorderStyle): void => {
+export const addGridLinesToSVG = (svg: SVGElement, width: number, height: number, options: IDefaultBorderStyleConfig): void => {
   const {
     lineColor, borderColor,
     // strokeWidth = Math.max(0.5, Math.min(1, width / 100)),
@@ -234,14 +232,13 @@ export const addGridLinesToSVG = (svg: SVGElement, width: number, height: number
  * @param containerId 容器ID
  * @param width 宽度
  * @param height 高度
- * @param gridColor 网格颜色
  * @param options 选项
  */
 export const createEmptyGridInContainer = (
   containerId: string,
   width: number,
   height: number,
-  borderOptions: IDefaultBorderStyle): void => {
+  borderOptions: IDefaultBorderStyleConfig): void => {
 
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -257,10 +254,10 @@ export const createEmptyGridInContainer = (
  * @param container 容器元素
  * @param width 宽度
  * @param height 高度
- * @param gridColor 网格颜色
+ * @param options 选项
  * @returns 新创建的SVG元素ID
  */
-const createGridBackground = (container: HTMLElement, width: number, height: number, option: IDefaultBorderStyle): string => {
+const createGridBackground = (container: HTMLElement, width: number, height: number, option: IDefaultBorderStyleConfig): string => {
   const svgId = `hanzi-grid-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
   // 使用统一的createGridSVG函数创建SVG
@@ -306,14 +303,15 @@ const loadLocalCharacterData = (character: string): any => {
  * 在指定容器中渲染汉字，grid-item
  * @param svgId 容器ID
  * @param character 要渲染的汉字
- * @param options 可选配置项
+ * @param renderConfig 可选配置项
  * @returns HanziWriter实例
  */
-export const renderHanziForItem = (svgId: string, character: string, fontOptions: IStrokeFontRenderOptions, borderOption: IDefaultBorderStyle) => {
+export const renderHanziForItem = (svgId: string, character: string, renderConfig:any) => {
+  const { fontStyleConfig, borderStyleConfig,backgroundType} = renderConfig
   // 字体渲染参数
   const _opt = {
     ...defaultOptions,
-    ...fontOptions,
+    ...fontStyleConfig,
   };
 
   // 字符验证
@@ -365,9 +363,9 @@ export const renderHanziForItem = (svgId: string, character: string, fontOptions
       const writer = writerInstances.get(svgId);
       if (writer && typeof writer.setCharacter === 'function') {
         // 如果使用了米字格，需要重新创建writer实例
-        if (_opt.useGridBackground) {
+        if (backgroundType === BACKGROUND_TYPE.DOT_GRID) {
           safelyClearContainer(container);
-          const targetSvgId = createGridBackground(container, fontSize, fontSize, borderOption);
+          const targetSvgId = createGridBackground(container, fontSize, fontSize, borderStyleConfig);
           const newWriter = HanziWriter.create(targetSvgId, str, writerOptions);
           writerInstances.set(svgId, newWriter);
 
@@ -399,8 +397,8 @@ export const renderHanziForItem = (svgId: string, character: string, fontOptions
 
       let targetSvgId = svgId;
       // 如果需要米字格，先创建背景
-      if (_opt.useGridBackground) {
-        targetSvgId = createGridBackground(container, fontSize, fontSize, borderOption);
+      if (backgroundType === BACKGROUND_TYPE.DOT_GRID) {
+        targetSvgId = createGridBackground(container, fontSize, fontSize, borderStyleConfig);
       }
 
       const writer = HanziWriter.create(targetSvgId, str, writerOptions);
@@ -440,7 +438,7 @@ export const renderHanziForItem = (svgId: string, character: string, fontOptions
       font-size: ${Math.floor(fallbackFontSize * 0.8)}px;
       color: ${_opt.strokeColor || '#333'};
       font-family: serif;
-      border: ${_opt.useGridBackground ? '1px solid ' + (_opt.gridColor || DEFAULT_CONFIG.renderConfig.borderStyle.lineColor) : 'none'};
+      border: ${_opt.useGridBackground ? '1px solid ' + (borderStyleConfig.lineColor || DEFAULT_CONFIG.renderConfig.borderStyleConfig.lineColor) : 'none'};
     ">${str}</div>`;
 
     return null;
@@ -454,7 +452,7 @@ export const renderHanziForItem = (svgId: string, character: string, fontOptions
 
 export const renderHanziInContainer = async (ContainerId: string, renderOption: any) => {
 
-  const { borderStyle, fontStyle, backgroundType } = renderOption
+  const { borderStyleConfig, fontStyleConfig, backgroundType } = renderOption
 
   // Steps.1 获取容器
   const container = document.getElementById(ContainerId);
@@ -482,15 +480,12 @@ export const renderHanziInContainer = async (ContainerId: string, renderOption: 
           gridItem.innerHTML = '';
 
           // 使用渲染函数替换每个字符
-          renderHanziForItem(gridItem.id, char, {
-            ...renderOption.fontStyle,
-            useGridBackground: true,
-          }, borderStyle);
+          renderHanziForItem(gridItem.id, char, renderOption);
         } else {
           console.log('字符为空,渲染为米字格', char)
-          const { width, height } = renderOption.fontStyle
+          const { width, height } = renderOption.fontStyleConfig
           createEmptyGridInContainer(
-            gridItem.id, width, height, borderStyle)
+            gridItem.id, width, height, borderStyleConfig)
         }
         resolve();
       }, index * defaultTimes); // 错开执行时间，避免性能问题
@@ -615,7 +610,7 @@ export const createStrokeSVG = (strokePaths: string[], size: number, options: {
   fillColor?: string;
   className?: string;
 } = {}): SVGElement => {
-  const { fillColor = DEFAULT_CONFIG.renderConfig.fontStyle.strokeColor, className } = options;
+  const { fillColor = DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor, className } = options;
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
@@ -664,7 +659,7 @@ export const generateStrokeData = async (
   config: any = {}
 ): Promise<any> => {
   // 使用默认配置
-  const defaultStrokeSize = DEFAULT_CONFIG.renderConfig.fontStyle.fontSize;
+  const defaultStrokeSize = DEFAULT_CONFIG.renderConfig.fontStyleConfig.fontSize;
 
   // 定义默认的笔画颜色数组
   const defaultStrokeColors = [
@@ -675,8 +670,8 @@ export const generateStrokeData = async (
   const {
     strokeSize = defaultStrokeSize,
     colorMode = 'single',
-    fillColor = DEFAULT_CONFIG.renderConfig.fontStyle.strokeColor,
-    radicalColor = DEFAULT_CONFIG.renderConfig.fontStyle.radicalColor,
+    fillColor = DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor,
+    radicalColor = DEFAULT_CONFIG.renderConfig.fontStyleConfig.radicalColor,
     customColors,
     includeArrows = true,
     arrowChar = '→'
@@ -817,7 +812,7 @@ export const renderStrokeProgressInContainer = async (
   strokeCount: number,
   renderConfig: any = {}
 ): Promise<void> => {
-  const { fontStyle, borderStyle, backgroundType } = renderConfig;
+  const { fontStyleConfig, borderStyleConfig, backgroundType } = renderConfig;
 
   const container = document.getElementById(containerId);
   if (!container) {
@@ -832,9 +827,9 @@ export const renderStrokeProgressInContainer = async (
       // 如果没有笔画数据或笔画数量为0，渲染空的米字格
       createEmptyGridInContainer(
         containerId,
-        fontStyle.width || DEFAULT_CONFIG.styleConfig.fontSize,
-        fontStyle.height || DEFAULT_CONFIG.styleConfig.fontSize,
-        borderStyle
+        fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize,
+        fontStyleConfig.height || DEFAULT_CONFIG.styleConfig.fontSize,
+        borderStyleConfig
       );
       return;
     }
@@ -845,12 +840,12 @@ export const renderStrokeProgressInContainer = async (
 
     // 清空容器
     safelyClearContainer(container);
-    const { lineWidth } = borderStyle;
+    const { lineWidth } = borderStyleConfig;
 
     // 创建SVG容器
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', (fontStyle.width || DEFAULT_CONFIG.styleConfig.fontSize).toString());
-    svg.setAttribute('height', (fontStyle.height || DEFAULT_CONFIG.styleConfig.fontSize).toString());
+    svg.setAttribute('width', (fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize).toString());
+    svg.setAttribute('height', (fontStyleConfig.height || DEFAULT_CONFIG.styleConfig.fontSize).toString());
     svg.setAttribute('class', 'T-HZ stroke-progress');
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
@@ -858,17 +853,17 @@ export const renderStrokeProgressInContainer = async (
     if (backgroundType === BACKGROUND_TYPE.DOT_GRID) {
       addGridLinesToSVG(
         svg,
-        fontStyle.width || DEFAULT_CONFIG.styleConfig.fontSize,
-        fontStyle.height || DEFAULT_CONFIG.styleConfig.fontSize,
-        borderStyle.gridColor || DEFAULT_CONFIG.renderConfig.borderStyle.lineColor);
+        fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize,
+        fontStyleConfig.height || DEFAULT_CONFIG.styleConfig.fontSize,
+        borderStyleConfig.lineColor || DEFAULT_CONFIG.renderConfig.borderStyleConfig.lineColor);
     }
 
     // 创建笔画SVG并添加到容器
     const strokeSVG = createStrokeSVG(
       strokesPortion,
-      fontStyle.width || DEFAULT_CONFIG.styleConfig.fontSize,
+      fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize,
       {
-        fillColor: fontStyle.strokeColor || DEFAULT_CONFIG.renderConfig.fontStyle.strokeColor
+        fillColor: fontStyleConfig.strokeColor || DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor
       }
     );
 
@@ -884,9 +879,9 @@ export const renderStrokeProgressInContainer = async (
     // 出错时渲染空的米字格
     createEmptyGridInContainer(
       containerId,
-      fontStyle.width || DEFAULT_CONFIG.styleConfig.fontSize,
-      fontStyle.height || DEFAULT_CONFIG.styleConfig.fontSize,
-      borderStyle,
+      fontStyleConfig.width || DEFAULT_CONFIG.styleConfig.fontSize,
+      fontStyleConfig.height || DEFAULT_CONFIG.styleConfig.fontSize,
+      borderStyleConfig,
     );
   }
 };

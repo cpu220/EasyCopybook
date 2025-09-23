@@ -3,7 +3,7 @@
 // 1. 枚举都是大写
 // 2. 配置项都首字母大写，default开头
 
-import { IDefaultBorderStyle, IBaseFontRenderOptions, IStrokeFontRenderOptions } from '@/interface';
+import { IDefaultBorderStyleConfig, IBaseFontRenderConfig, IDefaultStrokeFontRenderConfig } from '@/interface';
 
 /**
  * 默认参数
@@ -39,20 +39,28 @@ export const enum BACKGROUND_TYPE {
     SQUARE_GRID = 'squareGrid', // 田字格
 }
 
+export const enum LAYOUT_TYPE {
+
+}
+
+const TemplateConfig = {
+    column: DefaultGridConfig.defaultCol,
+    wordsPerRow:1, // 每个字占几行
+    wordsPreCol:10, // 一行几个字
+
+}
 /**
  * 基础渲染选项
  */
-const BaseFontRenderOptions: IBaseFontRenderOptions = {
+const BaseFontRenderConfig: IBaseFontRenderConfig = {
     width: DefaultGridConfig.width, // 设置合适的宽度
     height: DefaultGridConfig.height, // 设置合适的高度
     fontSize: DefaultGridConfig.fontSize, // 统一字体大小，默认等于宽度
     strokeWidth: 3, // 设置笔画宽度
     strokeColor: '#b8b8b8', // 笔画颜色（字体模式下也用作文字颜色）
-    radicalColor: '#3889f2', // 偏旁颜色
-    useGridBackground: true, // 使用米字格背景
-    gridColor: CharsheetColors.GRID_COLOR, // 设置米字格线条颜色
+    radicalColor: '#3889f2', // 偏旁颜色 
     padding: 5, // 内边距
-    useLocalData: true, // 使用本地字库数据
+   
 };
 
 
@@ -60,8 +68,8 @@ const BaseFontRenderOptions: IBaseFontRenderOptions = {
 /**
  * 笔画模式渲染选项
  */
-const StrokeFontRenderOptions: IStrokeFontRenderOptions = {
-    ...BaseFontRenderOptions,
+const DefaultStrokeFontRenderConfig: IDefaultStrokeFontRenderConfig = {
+    ...BaseFontRenderConfig,
     renderMode: RENDER_TYPE.STROKE,
     // 其他笔画模式配置
     showOutline: false, // 显示汉字轮廓
@@ -74,26 +82,29 @@ const StrokeFontRenderOptions: IStrokeFontRenderOptions = {
 /**
  * 字体模式渲染选项， 暂时不用，后面扩展用
  */
-const FontRenderOptions = {
-    ...BaseFontRenderOptions,
+const DefaultFontRenderOptions = {
+    ...BaseFontRenderConfig,
     renderMode: RENDER_TYPE.NORMAL,
     fontFamily: '"SimHei", "Heiti SC", "Microsoft YaHei", sans-serif', // 默认字体
     fontSize: DefaultGridConfig.width, // 默认字体大小
     fontWeight: 'normal' as const, // 默认字体粗细
-    fontStyle: 'normal' as const, // 默认字体样式
+    fontStyleConfig: 'normal' as const, // 默认字体样式
     fontSizeRatio: 0.8, // 默认字体大小比例
     // 其他字体模式配置...
 };
 
 
-const DefaultBorderStyle: IDefaultBorderStyle = {
-    showBorder: true,
-    useDashedLines: true,
-    backgroundColor: 'none',
-    lineWidth: 1,
-    lineColor: CharsheetColors.GRID_COLOR, // : '#ddd', 
-    borderColor: CharsheetColors.BORDER_COLOR, // : '#ccc',
-    borderDash: false, // : false,
+/**
+ * 表格样式的默认配置
+ */
+const DefaultBorderStyleConfig: IDefaultBorderStyleConfig = {
+    showBorder: true, // 是否显示边框
+    useDashedLines: true,  // 是否使用虚线边框
+    backgroundColor: 'none', // 边框背景颜色
+    lineWidth: 1, // 边框线宽
+    lineColor: CharsheetColors.GRID_COLOR, // 线条颜色 '#ddd', 
+    borderColor: CharsheetColors.BORDER_COLOR, // 边框颜色 '#ccc',
+    borderDash: false, // 是否使用虚线边框 
 }
 
 
@@ -106,17 +117,17 @@ const DefaultBorderStyle: IDefaultBorderStyle = {
  */
 export const DEFAULT_CONFIG = {
     templateConfig: {
-        column: DefaultGridConfig.defaultCol, // 列数  
+       ...TemplateConfig 
     }, // 模板信息
     styleConfig: {
         fontSize: DefaultGridConfig.fontSize,
     },
     renderConfig: {
-        fontStyle: {
-            ...StrokeFontRenderOptions
+        fontStyleConfig: {
+            ...DefaultStrokeFontRenderConfig
         },
-        borderStyle: {
-            ...DefaultBorderStyle
+        borderStyleConfig: {
+            ...DefaultBorderStyleConfig
         },
         backgroundType: BACKGROUND_TYPE.DOT_GRID, // 默认使用米字格
 

@@ -59,7 +59,7 @@ const ContentBox: React.FC = () => {
                             
         //                     // 使用渲染函数替换每个字符
         //                     renderHanziForItem( gridItem.id, char,{
-        //                         ...DEFAULT_CONFIG.renderConfig.fontStyle,
+        //                         ...DEFAULT_CONFIG.renderConfig.fontStyleConfig,
         //                         width: 60,
         //                         height: 60,
         //                         useGridBackground: true,
