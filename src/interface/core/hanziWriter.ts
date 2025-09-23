@@ -1,3 +1,6 @@
+import { IDefaultTemplateConfig } from './grid';
+
+
 export interface IDefaultBorderStyleConfig {
     showBorder: boolean;
     useDashedLines: boolean;
@@ -25,4 +28,13 @@ export interface IDefaultStrokeFontRenderConfig extends IBaseFontRenderConfig {
     fontSizeRatio: number;
     showBorder: boolean;
 
+}
+
+export interface IDEFAULT_CONFIG {
+    templateConfig: IDefaultTemplateConfig;
+    renderConfig: {
+        fontStyleConfig: IDefaultStrokeFontRenderConfig;
+        borderStyleConfig: IDefaultBorderStyleConfig;
+        backgroundType: string;
+    }
 }

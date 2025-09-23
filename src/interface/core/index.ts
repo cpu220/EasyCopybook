@@ -1,3 +1,3 @@
 export * from './form';
-export * from './render';
+export * from './grid';
 export * from './hanziWriter'

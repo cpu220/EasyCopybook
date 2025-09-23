@@ -200,6 +200,12 @@ const FormBox: React.FC = (): React.ReactNode => {
               }, {
                 label: '2排1个字',
                 value: '2x1'
+              },{
+                label: '3排1个字',
+                value: '3x1'
+              },{
+                label: '4排1个字',
+                value: '4x1'
               }]} />
           </FormItem>
 

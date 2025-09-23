@@ -3,7 +3,13 @@
 // 1. 枚举都是大写
 // 2. 配置项都首字母大写，default开头
 
-import { IDefaultBorderStyleConfig, IBaseFontRenderConfig, IDefaultStrokeFontRenderConfig } from '@/interface';
+import {
+    IDefaultTemplateConfig,
+    IDefaultBorderStyleConfig,
+    IBaseFontRenderConfig,
+    IDefaultStrokeFontRenderConfig,
+    IDEFAULT_CONFIG
+} from '@/interface';
 
 /**
  * 默认参数
@@ -38,17 +44,21 @@ export const enum BACKGROUND_TYPE {
     DOT_GRID = 'dotGrid', // 米字格
     SQUARE_GRID = 'squareGrid', // 田字格
 }
- 
+
 
 /**
  * 模版信息
  * 定位是网格布局信息
  */
-const DefaultTemplateConfig = {
+const DefaultTemplateConfig: IDefaultTemplateConfig = {
     column: DefaultGridConfig.defaultCol,
     wordsPerRow: 1, // 每个字占几行
     wordsPreCol: 1, // 一行几个字 
 }
+
+
+
+
 /**
  * 基础渲染选项
  */
@@ -115,7 +125,7 @@ const DefaultBorderStyleConfig: IDefaultBorderStyleConfig = {
  * 样式信息， 模板样式
  * 
  */
-export const DEFAULT_CONFIG = {
+export const DEFAULT_CONFIG: IDEFAULT_CONFIG = {
     // 模板信息 
     templateConfig: {
         ...DefaultTemplateConfig
@@ -134,3 +144,4 @@ export const DEFAULT_CONFIG = {
 
     }
 };
+

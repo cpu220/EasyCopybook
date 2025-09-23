@@ -1,1 +1,1 @@
-export * from './createGrid'
+export * from './createGridDOM'

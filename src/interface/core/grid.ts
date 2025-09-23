@@ -29,5 +29,10 @@ export interface IGridRow {
     strokeColor: string; // 笔画颜色
 }
 
+export interface IDefaultTemplateConfig {
+    column: number;
+    wordsPerRow: number;
+    wordsPreCol: number;
+}
 
  
