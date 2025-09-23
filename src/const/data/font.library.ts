@@ -2,6 +2,7 @@ import { IFontLibraryItem } from '@/interface';
 
 // 4年级 上学期 写字表
 // export const GRADE_4_UPPER_WRITING_LIST = '一二'
+// export const GRADE_4_UPPER_WRITING_LIST = '堵'
 export const GRADE_4_UPPER_WRITING_LIST = '一二子余攀登颤抖逐渐堵'
 // export const GRADE_4_UPPER_WRITING_LIST = '潮据堤阔盼滚顿逐渐堵犹崩震霎余淘牵鹅卵坑洼填庄稼俗跃葡萄稻熟豌按舒适暗恐僵硬枪耐探愉曾沟溢蚊弄科横竖绳系蝇证复研究达驾驶唤纪技改程超亿核奥益联质哲任善暮吟题侧峰庐缘降费须逊输虎操占嫩顺均叠隙茎柄萎瞧固宅临慎选择址良穴厅卧专即较睁翻斧劈缓浊丈撑竭累液奔茂滋曰溺返衔悲惨兽佩坚违抗环锁既狠著愤获嗅呆奈巢齿躯掩护幼搏庞量愣级链颤攀猴念辫呵摸甚跪捶绕顽脖脱概惹昏握摔凭掐班鼓殷俩练套裤逃亏挖撤堂砸锅否旋况败椅尤恨帅预溃品丑豪塞秦征词催醉杰亦雄项肃默晰振胸怀赞效凡顾训斥戎尝诸竞唯豹派娶媳妇淹逼浮旱徒扔饶骗灌溉'
 // 4年级 下学期 写字表

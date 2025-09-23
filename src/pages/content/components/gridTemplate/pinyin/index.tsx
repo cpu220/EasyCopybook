@@ -67,7 +67,7 @@ const Pinyin: React.FC<PinyinProps> = ({
   // 错误状态
   if (error) {
     return (
-      <div className={`${styles['grid-row-pinyin']} ${styles['pinyin-error']}`}>
+      <div className={`${styles['grid-row-pinyi']} ${styles['pinyin-error']}`}>
         {pinyin}
       </div>
     );

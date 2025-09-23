@@ -123,19 +123,30 @@ export const createMultiColorStrokeSVG = (strokePaths: string[], size: number, c
   svg.appendChild(group);
 
   // 为每个笔画设置不同的颜色
-  strokePaths.forEach((strokePath: string, index: number) => {
+  strokePaths.forEach((strokePath: string, index: number, arr:any[]) => {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttributeNS(null, 'd', strokePath);
 
     // 如果颜色数组不够，超出的笔画使用默认颜色
     let strokeColor: string;
-    if (index < colors.length) {
-      // 在颜色数组范围内，使用对应颜色
-      strokeColor = colors[index];
-    } else {
-      // 超出颜色数组范围，使用默认填充颜色
-      strokeColor = DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor;
+    
+    // if (index < colors.length) {
+    //   // 在颜色数组范围内，使用对应颜色
+    //   strokeColor = colors[index];
+    // } else {
+    //   // 超出颜色数组范围，使用默认填充颜色
+    //   strokeColor = DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor;
+    // }
+
+    if(index < arr.length-1) { 
+      strokeColor = DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor; 
+    }else {
+       strokeColor = colors[0]
+      
     }
+
+    console.log('createMultiColorStrokeSVG', index, strokeColor,arr.length)
+    
 
     path.style.fill = strokeColor;
     group.appendChild(path);
@@ -670,8 +681,7 @@ export const generateStrokeData = async (
 
   // 定义默认的笔画颜色数组
   const defaultStrokeColors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
-    '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43'
+    '#FF6B6B', '#54A0FF', '#5F27CD', 
   ];
 
   const {
@@ -832,6 +842,7 @@ export const renderStrokeProgressInContainer = async (
     const strokes = await getCharacterStrokeData(character);
     if (strokes.length === 0 || strokeCount <= 0) {
       // 如果没有笔画数据或笔画数量为0，渲染空的米字格
+      // 兜底用
       createEmptyGridInContainer(
         containerId,
         fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,

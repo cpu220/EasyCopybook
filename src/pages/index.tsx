@@ -17,7 +17,7 @@ const HomePage: React.FC = (): React.ReactNode => {
       <Layout className={styles.layout}>
         <Header className={styles.header}></Header>
         <Layout>
-          <Sider collapsible theme='light'  width={300} className={styles.sider}>
+          <Sider  theme='light'  width={300} className={styles.sider}>
              <LeftBox />
           </Sider>
           <Content className={styles.content}>

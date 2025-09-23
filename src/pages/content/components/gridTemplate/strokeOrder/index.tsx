@@ -36,7 +36,7 @@ const StrokeOrder: React.FC<StrokeOrderProps> = ({
         setLoading(true);
         const data = await generateStrokeData(char, {
           ...config,
-          strokeSize: 20, // 小尺寸，适合在tips区域展示
+          strokeSize: 30, // 小尺寸，适合在tips区域展示
           colorMode: 'stroke', // 每个笔画使用不同颜色
           includeArrows: true
         });
