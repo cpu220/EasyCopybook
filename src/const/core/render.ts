@@ -83,9 +83,10 @@ export const enum BACKGROUND_TYPE {
 /**
  * 字帖布局类型枚举
  */
-export const enum LAYOUT_TYPE {
+export const enum TEMPLATE_LAYOUT_TYPE {
     NORMAL = 'normal', // 常规字帖布局
     PRACTICE = 'practice', // 练字贴布局（n排一个字）
+    POETRY = 'poetry', // 诗词布局
 }
 
 
@@ -104,7 +105,7 @@ const DefaultTemplateConfig: IDefaultTemplateConfig = {
 
     showStrokeOrder: true, // 是否展示笔画顺序(顶部tips区域展示的笔画顺序，如果为true，则展示全部笔画)
 
-    templateLayoutType: LAYOUT_TYPE.NORMAL, // 模板类型
+    templateLayoutType: TEMPLATE_LAYOUT_TYPE.NORMAL, // 模板类型
 }
 
 

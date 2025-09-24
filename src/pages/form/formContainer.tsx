@@ -8,9 +8,9 @@ import { Row, Col, Divider, Form, Input, Switch, Select, InputNumber, ColorPicke
 import type { Color } from 'antd/es/color-picker';
 import { ReloadOutlined } from '@ant-design/icons';
 import { useModel } from 'umi';
-import { FONT_LIBRARY, RENDER_SIZES } from '@/const';
-import { clearStringForLibrary, generateRandomChineseChar } from '@/utils';
-
+import { FONT_LIBRARY, RENDER_SIZES, POETRY_LIBRARY, TEMPLATE_LAYOUT_TYPE } from '@/const';
+import { clearStringForLibrary, generateRandomChineseChar, parseFontLibraryContent, getPoetryJsonById, poetryJsonToString } from '@/utils';
+import { IPoetryItem } from '@/interface/poetry'
 
 // import { IDefaultTemplateConfig } from '@/interface'
 import styles from './index.less'
@@ -20,8 +20,6 @@ const FormItem = Form.Item;
 
 export const FormBox: React.FC = (): React.ReactNode => {
     const [form] = Form.useForm();
-
-
 
 
     // 使用UMI的model获取状态和操作方法
@@ -36,6 +34,9 @@ export const FormBox: React.FC = (): React.ReactNode => {
 
     } = useModel('CONTENT');
 
+    // 当前布局类型
+    const [layoutType, setLayoutType] = useState(templateConfig.templateLayoutType || TEMPLATE_LAYOUT_TYPE.NORMAL);
+
     // 一排几个字
     const [wordsPreCol, setWordsPreCol] = useState(templateConfig.wordsPreCol);
     // 每个字占几行
@@ -45,23 +46,24 @@ export const FormBox: React.FC = (): React.ReactNode => {
     const [showTips, setShowTips] = useState(true);
 
     const [showStrokeOrderShadow, setShowStrokeOrderShadow] = useState(templateConfig.showStrokeOrderShadow)
+    const [selectedPoetry, setSelectedPoetry] = useState<IPoetryItem>();
 
 
     // 初始化表单默认值
     useEffect(() => {
         const { wordsPerRow, wordsPreCol } = templateConfig;
 
-
-
+        const  type = templateConfig.templateLayoutType || TEMPLATE_LAYOUT_TYPE.NORMAL
+        console.log(fontLibraryItem.list)
         form.setFieldsValue({
             fontLibrary: fontLibraryItem?.code || FONT_LIBRARY[0].code,
-            diyFontLibrary: fontLibraryItem.list || '',
+            diyFontLibrary: getStr(type, fontLibraryItem.list),
             randomFontLibrary: fontLibraryItem.list.length,
             // fontSize: fontStyleConfig.fontSize,
             strokeColor: fontStyleConfig.strokeColor,
             radicalColor: fontStyleConfig.radicalColor,
             wordsPreColAndRow: `${wordsPerRow}x${wordsPreCol}`,
-
+            templateLayoutType: type,
             pinyin: templateConfig.pinyin,
             showStrokeOrderShadow: templateConfig.showStrokeOrderShadow,
             strokeNumber: templateConfig.strokeNumber,
@@ -69,22 +71,31 @@ export const FormBox: React.FC = (): React.ReactNode => {
         });
     }, [form, fontLibraryItem, fontStyleConfig]);
 
+    const getStr = (type: string, value: string | IPoetryItem) => {
+        let _fontLibrary = '';
+        if (type === TEMPLATE_LAYOUT_TYPE.POETRY && selectedPoetry) {
+            const { str, textarea } = poetryJsonToString(value as IPoetryItem)
+            return textarea
+        } else {
+            return value
+        }
+    }
+
     // 表单提交处理
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
 
-            /**
-             * 清除字库中的非法字符
-             */
-            const _diyFontLibrary = clearStringForLibrary(values.diyFontLibrary);
 
-
+            let _fontLibrary = values.diyFontLibrary;
+            if (values.templateLayoutType === TEMPLATE_LAYOUT_TYPE.POETRY && selectedPoetry) {
+                _fontLibrary = selectedPoetry
+            }
             // 1. 更新字库列表
             const selectedFontList = FONT_LIBRARY.find(lib => lib.code === values.fontLibrary) || FONT_LIBRARY[0];
             updateFontLibraryItem({
                 ...selectedFontList,
-                list: _diyFontLibrary
+                list: _fontLibrary
             });
 
             // 2. 更新渲染配置相关状态
@@ -103,6 +114,7 @@ export const FormBox: React.FC = (): React.ReactNode => {
                     pinyin: false,
                     showStrokeOrder: false,
                     showStrokeOrderShadow: false,
+                    templateLayoutType: values.templateLayoutType
                 }
             } else {
                 _tempConf = {
@@ -112,17 +124,12 @@ export const FormBox: React.FC = (): React.ReactNode => {
                     showStrokeOrderShadow: values.showStrokeOrderShadow,
                     strokeNumber: values.strokeNumber,
                     showStrokeOrder: values.showStrokeOrder,
+                    templateLayoutType: values.templateLayoutType
                 }
             }
-
             // 3. 更新布局配置相关状态
             updateTemplateConfig({
-                wordsPerRow,
-                wordsPreCol,
-                pinyin: values.pinyin,
-                showStrokeOrderShadow: values.showStrokeOrderShadow,
-                strokeNumber: values.strokeNumber,
-                showStrokeOrder: values.showStrokeOrder,
+                ..._tempConf,
             });
 
             message.success('配置已保存，字帖将重新渲染');
@@ -138,10 +145,7 @@ export const FormBox: React.FC = (): React.ReactNode => {
      */
     const handleChangeFontLibrary = (val: string) => {
         const selectedFontList = FONT_LIBRARY.find((lib) => String(lib.code) === String(val)) || FONT_LIBRARY[0];
-        // updateFontLibraryItem({
-        //   ...selectedFontList,
-        //   list: ''
-        // })
+        // 使用统一的方法解析字体库内容
         form.setFieldsValue({
             fontLibrary: selectedFontList.code,
             diyFontLibrary: selectedFontList.list || ''
@@ -185,12 +189,26 @@ export const FormBox: React.FC = (): React.ReactNode => {
      * @param val 随机字库(字数)
      */
     const handleChangeRandomFontLibrary = (val: number) => {
+        // generateRandomChineseChar本身应该已经生成了纯汉字字符串，但为了保险起见，还是进行一次过滤
         const str = generateRandomChineseChar(val)
         console.log('随机字库(字数)', val, str)
 
         form.setFieldsValue({
             diyFontLibrary: str
         })
+    }
+
+    /**
+     * 布局类型选择改变时的处理函数
+     */
+    const handleChangeLayoutType = (val: string) => {
+        setLayoutType(val);
+        // 如果切换到诗词布局，默认隐藏一些不相关的选项
+        if (val === TEMPLATE_LAYOUT_TYPE.POETRY) {
+            setShowTips(false);
+        } else {
+            setShowTips(true);
+        }
     }
 
 
@@ -290,6 +308,10 @@ export const FormBox: React.FC = (): React.ReactNode => {
     }
 
 
+    /**
+     * 布局类型选择选项
+     * @returns 布局类型选择选项
+     */
     const createWordsPreColOptions = () => {
         const _map = [
             '1x1', '1x2', '2x1', '3x1', '4x1', `1x${templateConfig.column}`
@@ -303,6 +325,23 @@ export const FormBox: React.FC = (): React.ReactNode => {
             }
         })
         return arr;
+    }
+
+
+    const handleChangeSelectedPoetry = (id: any) => {
+        console.log(id)
+
+        const jsonItem = POETRY_LIBRARY.find(item => Number(item.id) === Number(id));
+        console.log(jsonItem)
+
+        if (jsonItem) {
+            const { str, textarea } = poetryJsonToString(jsonItem)
+            // console.log(str)
+            form.setFieldsValue({
+                diyFontLibrary: textarea
+            })
+            setSelectedPoetry(jsonItem)
+        }
     }
 
 
@@ -356,16 +395,45 @@ export const FormBox: React.FC = (): React.ReactNode => {
 
                     <Divider orientation="left">布局</Divider>
 
+                    {/* 布局类型选择 */}
                     <FormItem
-                        // label="布局"
-                        name="wordsPreColAndRow"
+                        name="templateLayoutType"
                     >
-                        <Select
-                            onChange={handleChangeWordsPreColAndRow}
-                            key={`${wordsPerRow}x${wordsPreCol}`}
-                            value={`${wordsPerRow}x${wordsPreCol}`}
-                            options={createWordsPreColOptions()} />
+                        <Select onChange={handleChangeLayoutType}>
+                            <Select.Option value={TEMPLATE_LAYOUT_TYPE.NORMAL}>普通布局</Select.Option>
+                            <Select.Option value={TEMPLATE_LAYOUT_TYPE.PRACTICE}>练字贴布局</Select.Option>
+                            <Select.Option value={TEMPLATE_LAYOUT_TYPE.POETRY}>诗词布局</Select.Option>
+                        </Select>
                     </FormItem>
+
+                    {/* 诗词选择（仅在诗词布局下显示） */}
+                    {layoutType === TEMPLATE_LAYOUT_TYPE.POETRY && (
+                        <FormItem>
+                            <Select
+                                placeholder="请选择一首诗词"
+                                onChange={handleChangeSelectedPoetry}
+                                style={{ width: '100%' }}
+                                options={POETRY_LIBRARY.map((poetry: IPoetryItem) => ({
+                                    label: `${poetry.title} - ${poetry.dynasty} ${poetry.author}`,
+                                    value: poetry.id
+                                }))}
+                            />
+                        </FormItem>
+                    )}
+
+                    {/* 普通布局选项 */}
+                    {(layoutType === TEMPLATE_LAYOUT_TYPE.NORMAL || layoutType === TEMPLATE_LAYOUT_TYPE.PRACTICE) && (
+                        <FormItem
+                            // label="布局"
+                            name="wordsPreColAndRow"
+                        >
+                            <Select
+                                onChange={handleChangeWordsPreColAndRow}
+                                key={`${wordsPerRow}x${wordsPreCol}`}
+                                value={`${wordsPerRow}x${wordsPreCol}`}
+                                options={createWordsPreColOptions()} />
+                        </FormItem>
+                    )}
 
                     {createTipsContainer()}
 

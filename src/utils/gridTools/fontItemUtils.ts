@@ -32,7 +32,8 @@ export const createFontItem = ({
  * @returns 字体项对象
  */
 export const createStandardFontItem = (char: string): IFontItem => {
-  return createFontItem({ char });
+  
+  return createFontItem({ char:char.trim() });
 };
 
 /**

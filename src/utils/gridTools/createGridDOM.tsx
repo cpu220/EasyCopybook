@@ -119,16 +119,32 @@ const createGridRow = ({ arr, row, templateConfig, char }: {
 export const createGrid = (list: string, templateConfig: IDefaultTemplateConfig, charStrokeCounts?: Map<string, number>) => {
 
     const arr = formatGridData(list, templateConfig, charStrokeCounts)
-    console.log(arr)
+    console.log('createGrid', arr)
+    // 检查arr是否为空数组或undefined
+    if (!arr || arr.length === 0) {
+        console.warn('No data to create grid');
+        return null;
+    }
+    
     const result = []
 
     for (let y = 0; y < arr.length; y++) {
         // 行元素 
+        const rowData = arr[y];
+        
+        // 检查当前行是否为空数组
+        if (!rowData || rowData.length === 0) {
+            continue;
+        }
+        
+        // 确保有第一个字符
+        const firstChar = rowData[0]?.char || '';
+        
         const rowDOM = createGridRow({
-            arr: arr[y],
+            arr: rowData,
             row: y,
             templateConfig,
-            char: arr[y][0].char
+            char: firstChar
         })
         result.push(rowDOM)
     }

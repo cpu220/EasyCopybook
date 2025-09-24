@@ -28,16 +28,18 @@ const ContentBox: React.FC = () => {
 
  
 
-    // 在组件挂载后，当DOM渲染完成时自动触发handleTransition
+    // 在组件挂载后或相关数据变化时自动触发handleTransition
     useEffect(() => {  
-        // triggerTransition();
-    }, []); // 只在组件挂载后执行一次
+        if (fontLibraryItem?.list) { // 确保有内容时才触发
+            triggerTransition();
+        }
+    }, [fontLibraryItem, templateConfig, fontStyleConfig, borderStyleConfig, backgroundType]); // 当相关配置变化时重新触发
 
     const triggerTransition = async () => {
         try {
             // 确保DOM已经渲染完成
             await new Promise(resolve => setTimeout(resolve, 0));
-            // await handleTransition();
+            await handleTransition();
         } catch (error) {
             console.error('自动触发转换失败:', error);
         }
@@ -56,21 +58,20 @@ const ContentBox: React.FC = () => {
             backgroundType
         };
         console.log('finalRenderConfig',finalRenderConfig) 
-        // await renderHanziInContainer(key, finalRenderConfig)
+        await renderHanziInContainer(key, finalRenderConfig)
     }
 
 
     return (
         <div >
             <div id="top-button-content" className={styles['top-button-content']} >
-                {/* <Button type="primary" onClick={handleTransition}>生成字帖</Button>
-                 */}
+                <Button type="primary" onClick={handleTransition}>生成字帖</Button>
                  <Space>
                     <Button shape="circle" icon={<ExportOutlined />}></Button>
                     <Button shape="circle" icon={<PrinterOutlined />}></Button>
                  </Space>
             </div>
-            <BaseGrid />
+            <BaseGrid fontLibraryItem={fontLibraryItem} />
         </div>
     );
 };

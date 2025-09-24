@@ -4,11 +4,14 @@
 
 import { IFontItem, IDefaultTemplateConfig } from '@/interface';
 import { GridLayoutStrategy } from './baseGridLayoutStrategy';
-import { MultiRowsOneWordStrategy } from './layoutStrategies/multiRowsOneWordStrategy';
-import { FewWordsPerRowStrategy } from './layoutStrategies/fewWordsPerRowStrategy';
-import { FullRowWordsStrategy } from './layoutStrategies/fullRowWordsStrategy';
-import { PracticeWritingStrategy } from './layoutStrategies/practiceWritingStrategy';
-import { LAYOUT_TYPE } from '@/const/core/render';
+import { 
+  MultiRowsOneWordStrategy,
+  FewWordsPerRowStrategy,
+  FullRowWordsStrategy,
+  PracticeWritingStrategy,
+  PoetryLayoutStrategy
+} from './layoutStrategies';
+import { TEMPLATE_LAYOUT_TYPE } from '@/const';
 
 
 /**
@@ -35,8 +38,13 @@ export class GridLayoutStrategyFactory {
   }): GridLayoutStrategy {
     const { wordsPerRow, wordsPreCol, column, templateLayoutType, charStrokeCounts } = config;
     
+    // 诗词布局策略
+    if (templateLayoutType === TEMPLATE_LAYOUT_TYPE.POETRY) {
+      return new PoetryLayoutStrategy(charStrokeCounts);
+    }
+    
     // 练字贴布局 - n排一个字的策略
-    if (templateLayoutType === LAYOUT_TYPE.PRACTICE) {
+    if (templateLayoutType === TEMPLATE_LAYOUT_TYPE.PRACTICE) {
       return new PracticeWritingStrategy(undefined, charStrokeCounts);
     }
     
