@@ -1,4 +1,4 @@
-import FormBox from '@/pages/form'
+import { FormBox } from '@/pages/form'
 
 const LeftBox: React.FC = (): React.ReactNode => {
   return (

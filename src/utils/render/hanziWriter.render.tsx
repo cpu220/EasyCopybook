@@ -499,7 +499,7 @@ export const renderHanziInContainer = async (ContainerId: string, renderConfig: 
         const isStrokeOrderShadow = gridItem.dataset.isStrokeOrderShadow === 'true';
         const strokeOrderIndex = parseInt(gridItem.dataset.strokeOrder || '0');
 
-        console.log('renderHanziInContainer', char, originalChar,isStrokeOrderShadow,strokeOrderIndex);
+        // console.log('renderHanziInContainer', char, originalChar,isStrokeOrderShadow,strokeOrderIndex);
 
         if (!char&& originalChar && isStrokeOrderShadow && strokeOrderIndex > 0) {
           // 展示汉字不存在，原始汉字存在，当前网格是笔画阴影，笔画数大于0，则进行笔画渲染
