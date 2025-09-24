@@ -46,6 +46,15 @@ const DefaultComponentSizes = {
     inputNumberMin: 1,      // 数字输入最小值
 };
 
+/**
+ * 练字贴布局配置
+ * 用于练字贴（n排一个字）布局的特定配置
+ */
+const DefaultPracticeConfig = {
+    defaultRowsPerChar: 4,  // 默认每个字占据的行数
+    strokeDisplayRows: 3,   // 用于显示笔画的行数（除去第一行显示汉字）
+};
+
 // 颜色配置保留但不导出到RENDER_SIZES中
 const DefaultCharsheetColors = {
     BORDER_COLOR: '#ddd',
@@ -71,6 +80,14 @@ export const enum BACKGROUND_TYPE {
     SQUARE_GRID = 'squareGrid', // 田字格
 }
 
+/**
+ * 字帖布局类型枚举
+ */
+export const enum LAYOUT_TYPE {
+    NORMAL = 'normal', // 常规字帖布局
+    PRACTICE = 'practice', // 练字贴布局（n排一个字）
+}
+
 
 /**
  * 模版信息
@@ -86,6 +103,8 @@ const DefaultTemplateConfig: IDefaultTemplateConfig = {
     strokeNumber: 3, // 展示几笔 (当 showStrokeShadow 为true时有效)
 
     showStrokeOrder: true, // 是否展示笔画顺序(顶部tips区域展示的笔画顺序，如果为true，则展示全部笔画)
+
+    templateLayoutType: LAYOUT_TYPE.NORMAL, // 模板类型
 }
 
 
@@ -187,6 +206,8 @@ export const RENDER_SIZES = {
     spacing: DefaultSpacingConfig,
     // 组件特定尺寸配置 - 与字帖渲染相关的组件尺寸
     component: DefaultComponentSizes,
+    // 练字贴配置
+    practice: DefaultPracticeConfig,
 } as const;
 
 

@@ -7,6 +7,8 @@ import { GridLayoutStrategy } from './baseGridLayoutStrategy';
 import { MultiRowsOneWordStrategy } from './layoutStrategies/multiRowsOneWordStrategy';
 import { FewWordsPerRowStrategy } from './layoutStrategies/fewWordsPerRowStrategy';
 import { FullRowWordsStrategy } from './layoutStrategies/fullRowWordsStrategy';
+import { PracticeWritingStrategy } from './layoutStrategies/practiceWritingStrategy';
+import { LAYOUT_TYPE } from '@/const/core/render';
 
 
 /**
@@ -20,6 +22,7 @@ export class GridLayoutStrategyFactory {
    * @param config.wordsPerRow 每行的字数
    * @param config.wordsPreCol 每列的字数
    * @param config.column 总列数
+   * @param config.layoutType 布局类型（常规字帖或练字贴）
    * @param config.charStrokeCounts 可选，汉字及其实际笔画数的映射
    * @returns 对应的布局策略实例
    */
@@ -27,10 +30,17 @@ export class GridLayoutStrategyFactory {
     wordsPerRow: number; 
     wordsPreCol: number; 
     column: number; 
+    templateLayoutType?: string;
     charStrokeCounts?: Map<string, number>;
   }): GridLayoutStrategy {
-    const { wordsPerRow, wordsPreCol, column, charStrokeCounts } = config;
+    const { wordsPerRow, wordsPreCol, column, templateLayoutType, charStrokeCounts } = config;
     
+    // 练字贴布局 - n排一个字的策略
+    if (templateLayoutType === LAYOUT_TYPE.PRACTICE) {
+      return new PracticeWritingStrategy(undefined, charStrokeCounts);
+    }
+    
+    // 常规字帖布局策略
     // 类型1: 几排展示1个字的策略 (wordsPreCol === 1)
     if (wordsPreCol === 1 && wordsPerRow >= 1) {
       // wordsPerRow 在这里表示每个字占据的行数
@@ -61,12 +71,14 @@ export class GridLayoutStrategyFactory {
  * @returns 二维数组，每个元素是一个字符
  */
 export const formatGridData = (str: string, templateConfig: IDefaultTemplateConfig, charStrokeCounts?: Map<string, number>) => {
-  const { column, wordsPerRow, wordsPreCol, showStrokeOrderShadow, strokeNumber } = templateConfig
+  const { column, wordsPerRow, wordsPreCol, showStrokeOrderShadow, templateLayoutType,strokeNumber } = templateConfig
+  console.log('formatGridData', templateConfig);
   // 获取对应的布局策略
   const strategy = GridLayoutStrategyFactory.getStrategy({ 
     wordsPerRow, 
     wordsPreCol, 
     column,
+    templateLayoutType,
     charStrokeCounts
   });
   // 创建字符数组

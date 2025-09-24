@@ -1,4 +1,7 @@
-// 统一导出所有布局策略类
+/**
+ * 布局策略统一导出
+ */
 export { MultiRowsOneWordStrategy } from './multiRowsOneWordStrategy';
 export { FewWordsPerRowStrategy } from './fewWordsPerRowStrategy';
 export { FullRowWordsStrategy } from './fullRowWordsStrategy';
+export { PracticeWritingStrategy } from './practiceWritingStrategy';

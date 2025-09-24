@@ -1,8 +1,8 @@
 
 
 interface IGrid {
-  row: number;
-  col: number;
+    row: number;
+    col: number;
 }
 
 /**
@@ -10,7 +10,7 @@ interface IGrid {
  */
 export interface IFontItem {
     /** 字符 */
-    char: string; 
+    char: string;
     /** 笔画数 */
     strokes?: number;
     /** 拼音 */
@@ -46,6 +46,8 @@ export interface IDefaultTemplateConfig {
     strokeNumber: number; // 展示几笔 (当 showStrokeShadow 为true时有效)
 
     showStrokeOrder: boolean; // 是否展示笔画顺序(顶部tips区域展示的笔画顺序，如果为true，则展示全部笔画)
+
+    templateLayoutType: string, // 模板类型
 }
 
- 
+

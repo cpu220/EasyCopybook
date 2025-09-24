@@ -504,7 +504,7 @@ export const renderHanziInContainer = async (ContainerId: string, renderConfig: 
         if (!char&& originalChar && isStrokeOrderShadow && strokeOrderIndex > 0) {
           // 展示汉字不存在，原始汉字存在，当前网格是笔画阴影，笔画数大于0，则进行笔画渲染
           // 笔画顺序格子的特殊处理
-          console.log('渲染笔画顺序格子', char, strokeOrderIndex);
+          // console.log('渲染笔画顺序格子', char, strokeOrderIndex);
           
           gridItem.innerHTML = '';
           renderStrokeProgressInContainer(gridItem.id, originalChar, strokeOrderIndex, renderConfig);
@@ -515,7 +515,7 @@ export const renderHanziInContainer = async (ContainerId: string, renderConfig: 
         } else {
           // 目前只有2种类型，其他的均渲染为空格子
           // 空格子，渲染为米字格
-          console.log('字符为空,渲染为米字格', char)
+          // console.log('字符为空,渲染为米字格', char)
           const { width, height } = renderConfig.fontStyleConfig
           createEmptyGridInContainer(
             gridItem.id, width, height, borderStyleConfig)
