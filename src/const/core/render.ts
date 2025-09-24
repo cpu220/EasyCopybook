@@ -79,7 +79,7 @@ export const enum BACKGROUND_TYPE {
 const DefaultTemplateConfig: IDefaultTemplateConfig = {
     column: DefaultGridConfig.defaultCol,
     wordsPerRow: 1, // 每个字占几行
-    wordsPreCol: 1, // 一行几个字 
+    wordsPreCol: 1, // 一行几个字  目前只有 2 和 column  其他的展示不对
     pinyin: true, // 是否展示拼音
 
     showStrokeOrderShadow: true, // 是否展示笔画（米字格内展示的笔画）
