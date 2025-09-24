@@ -40,8 +40,8 @@ export interface IDefaultTemplateConfig {
     wordsPerRow: number; // 每个字占几行
     wordsPreCol: number; // 一行几个字 
     pinyin: boolean; // 是否展示拼音
-    showStroke: boolean; // 是否展示笔画（米字格内展示的笔画）
-    strokeNumber: number; // 展示几笔 (当 showStroke 为true时有效)
+    showStrokeShadow: boolean; // 是否展示笔画阴影（米字格内展示的笔画）
+    strokeNumber: number; // 展示几笔 (当 showStrokeShadow 为true时有效)
     showStrokeOrder: boolean; // 是否展示笔画顺序(顶部tips区域展示的笔画顺序，如果为true，则展示全部笔画)
 }
 

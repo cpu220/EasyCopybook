@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Form, Input, Select, InputNumber, ColorPicker, Button, Card, Space, message } from 'antd';
+import { Row, Col, Form, Input,Switch, Select, InputNumber, ColorPicker, Button, Card, Space, message } from 'antd';
 import type { Color } from 'antd/es/color-picker';
 import { ReloadOutlined } from '@ant-design/icons';
 import { useModel } from 'umi';
@@ -52,6 +52,11 @@ const FormBox: React.FC = (): React.ReactNode => {
       strokeColor: fontStyleConfig.strokeColor,
       radicalColor: fontStyleConfig.radicalColor,
       wordsPreColAndRow: `${wordsPerRow}x${wordsPreCol}`,
+
+      pinyin: templateConfig.pinyin,
+      showStrokeShadow: templateConfig.showStrokeShadow,
+      // strokeNumber: templateConfig.strokeNumber,
+      showStrokeOrder: templateConfig.showStrokeOrder,
     });
   }, [form, fontLibraryItem, fontStyleConfig]);
 
@@ -83,7 +88,11 @@ const FormBox: React.FC = (): React.ReactNode => {
       // 3. 更新布局配置相关状态
       updateTemplateConfig({
         wordsPerRow,
-        wordsPreCol
+        wordsPreCol,
+        pinyin: values.pinyin,
+        showStrokeShadow: values.showStrokeShadow,
+        // strokeNumber: values.strokeNumber,
+        showStrokeOrder: values.showStrokeOrder,
       });
 
       message.success('配置已保存，字帖将重新渲染');
@@ -170,6 +179,7 @@ const FormBox: React.FC = (): React.ReactNode => {
               min={1}
               max={2000}
               prefix="生成随机"
+              controls={false}
               suffix="个字"
               style={{ width: '100%', textAlign: "center" }}
               addonAfter={<ReloadOutlined onClick={
@@ -178,6 +188,28 @@ const FormBox: React.FC = (): React.ReactNode => {
                 )
               } />}
               onChange={(value: number | null) => value && handleChangeRandomFontLibrary(value)} />
+          </FormItem>
+
+
+          <FormItem 
+            // label={'是否展示拼音'}
+            name="pinyin"
+          >
+            <Switch checkedChildren="开启拼音" unCheckedChildren="关闭拼音"/>
+          </FormItem>
+
+          <FormItem 
+            // label={'是否展示笔画'}
+            name="showStrokeShadow"
+          >
+            <Switch checkedChildren="开启笔画阴影" unCheckedChildren="关闭笔画阴影" />
+          </FormItem>
+
+          <FormItem 
+            // label={'是否展示笔画顺序'}
+            name="showStrokeOrder"
+          >
+            <Switch checkedChildren="开启笔画顺序" unCheckedChildren="关闭笔画顺序"/>
           </FormItem>
 
           {/* 字体大小 */}

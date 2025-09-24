@@ -68,7 +68,7 @@ const createGridRow = ({ arr, row, templateConfig, char }: {
     templateConfig: IDefaultTemplateConfig,
     char: string
 }) => {
-    const { pinyin, showStroke, strokeNumber, showStrokeOrder } = templateConfig;
+    const { pinyin, showStrokeShadow, strokeNumber, showStrokeOrder } = templateConfig;
 
 
     const resultDOM = []
