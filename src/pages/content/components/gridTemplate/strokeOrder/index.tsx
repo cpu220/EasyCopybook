@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { generateStrokeData, getCharacterStrokeData } from '@/utils/render/hanziWriterRender';
+import { generateStrokeData, getCharacterStrokeData } from '@/utils';
 import styles from './index.less';
 
 /**
@@ -36,7 +36,7 @@ const StrokeOrder: React.FC<StrokeOrderProps> = ({
         setLoading(true);
         const data = await generateStrokeData(char, {
           ...config,
-          strokeSize: 30, // 小尺寸，适合在tips区域展示
+          strokeSize: 20, // 小尺寸，适合在tips区域展示
           colorMode: 'stroke', // 每个笔画使用不同颜色
           includeArrows: true
         });

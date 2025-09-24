@@ -17,9 +17,11 @@
     "cnchar-words": "^3.2.6",
     "hanzi-writer": "^3.7.3",
     "hanzi-writer-data": "^2.0.1",
+    "mockjs": "^1.1.0",
     "umi": "^4.4.12"
   },
   "devDependencies": {
+    "@types/mockjs": "^1.0.10",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
     "typescript": "^5.0.3"

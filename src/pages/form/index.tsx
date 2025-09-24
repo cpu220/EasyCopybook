@@ -6,9 +6,10 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Form, Input, Select, InputNumber, ColorPicker, Button, Card, Space, message } from 'antd';
 import type { Color } from 'antd/es/color-picker';
+import { ReloadOutlined } from '@ant-design/icons';
 import { useModel } from 'umi';
 import { FONT_LIBRARY } from '@/const';
-import { clearStringForLibrary } from '@/utils'
+import { clearStringForLibrary, generateRandomChineseChar } from '@/utils'
 
 const FormItem = Form.Item;
 
@@ -46,6 +47,7 @@ const FormBox: React.FC = (): React.ReactNode => {
     form.setFieldsValue({
       fontLibrary: fontLibraryItem?.code || FONT_LIBRARY[0].code,
       diyFontLibrary: fontLibraryItem.list || '',
+      randomFontLibrary: fontLibraryItem.list.length,
       // fontSize: fontStyleConfig.fontSize,
       strokeColor: fontStyleConfig.strokeColor,
       radicalColor: fontStyleConfig.radicalColor,
@@ -105,13 +107,31 @@ const FormBox: React.FC = (): React.ReactNode => {
       fontLibrary: selectedFontList.code,
       diyFontLibrary: selectedFontList.list || ''
     })
- 
+
   }
 
+  /**
+   * 字库选择改变时的处理函数
+   * @param val 字库code
+   */
   const handleChangeWordsPreColAndRow = (val: string) => {
     const [wordsPerRow, wordsPreCol] = val.split('x').map(Number);
     setWordsPerRow(wordsPerRow);
     setWordsPreCol(wordsPreCol);
+  }
+
+
+  /**
+   * 随机字库(字数)改变时的处理函数
+   * @param val 随机字库(字数)
+   */
+  const handleChangeRandomFontLibrary = (val: number) => {
+    const str = generateRandomChineseChar(val)
+    console.log('随机字库(字数)', val, str)
+
+    form.setFieldsValue({
+      diyFontLibrary: str
+    })
   }
 
   return (
@@ -141,7 +161,24 @@ const FormBox: React.FC = (): React.ReactNode => {
           >
             <Input.TextArea rows={4} />
           </FormItem>
+          <FormItem
+            // label="随机字库"
+            name="randomFontLibrary"
 
+          >
+            <InputNumber
+              min={1}
+              max={2000}
+              prefix="生成随机"
+              suffix="个字"
+              style={{ width: '100%', textAlign: "center" }}
+              addonAfter={<ReloadOutlined onClick={
+                () => handleChangeRandomFontLibrary(
+                  form.getFieldValue('randomFontLibrary')
+                )
+              } />}
+              onChange={(value: number | null) => value && handleChangeRandomFontLibrary(value)} />
+          </FormItem>
 
           {/* 字体大小 */}
           {/* <FormItem
@@ -188,7 +225,7 @@ const FormBox: React.FC = (): React.ReactNode => {
             name="wordsPreColAndRow"
           >
             <Select
-              onChange = {handleChangeWordsPreColAndRow}
+              onChange={handleChangeWordsPreColAndRow}
               key={`${wordsPerRow}x${wordsPreCol}`}
               value={`${wordsPerRow}x${wordsPreCol}`}
               options={[{
@@ -197,16 +234,16 @@ const FormBox: React.FC = (): React.ReactNode => {
               }, {
                 label: '1排 2个字',
                 value: '1x2'
-              },{
+              }, {
                 label: `1排 ${templateConfig.column}个字`,
                 value: `1x${templateConfig.column}`
               }, {
                 label: '2排1个字',
                 value: '2x1'
-              },{
+              }, {
                 label: '3排1个字',
                 value: '3x1'
-              },{
+              }, {
                 label: '4排1个字',
                 value: '4x1'
               }]} />
