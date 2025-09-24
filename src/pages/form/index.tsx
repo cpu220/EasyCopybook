@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Form, Input,Switch, Select, InputNumber, ColorPicker, Button, Card, Space, message } from 'antd';
+import { Row, Col, Form, Input, Switch, Select, InputNumber, ColorPicker, Button, Card, Space, message } from 'antd';
 import type { Color } from 'antd/es/color-picker';
 import { ReloadOutlined } from '@ant-design/icons';
 import { useModel } from 'umi';
@@ -55,7 +55,7 @@ const FormBox: React.FC = (): React.ReactNode => {
 
       pinyin: templateConfig.pinyin,
       showStrokeOrderShadow: templateConfig.showStrokeOrderShadow,
-      // strokeNumber: templateConfig.strokeNumber,
+      strokeNumber: templateConfig.strokeNumber,
       showStrokeOrder: templateConfig.showStrokeOrder,
     });
   }, [form, fontLibraryItem, fontStyleConfig]);
@@ -91,7 +91,7 @@ const FormBox: React.FC = (): React.ReactNode => {
         wordsPreCol,
         pinyin: values.pinyin,
         showStrokeOrderShadow: values.showStrokeOrderShadow,
-        // strokeNumber: values.strokeNumber,
+        strokeNumber: values.strokeNumber,
         showStrokeOrder: values.showStrokeOrder,
       });
 
@@ -191,26 +191,48 @@ const FormBox: React.FC = (): React.ReactNode => {
           </FormItem>
 
 
-          <FormItem 
-            // label={'是否展示拼音'}
-            name="pinyin"
-          >
-            <Switch checkedChildren="开启拼音" unCheckedChildren="关闭拼音"/>
-          </FormItem>
+          <Row>
+            <Col span={12}>
+              <FormItem
+                // label={'是否展示拼音'}
+                name="pinyin"
+              >
+                <Switch checkedChildren="开启拼音" unCheckedChildren="关闭拼音" />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                // label={'是否展示笔画顺序'}
+                name="showStrokeOrder"
+              >
+                <Switch checkedChildren="开启笔画顺序" unCheckedChildren="关闭笔画顺序" />
+              </FormItem>
+            </Col>
+          </Row>
 
-          <FormItem 
-            // label={'是否展示笔画'}
-            name="showStrokeOrderShadow"
-          >
-            <Switch checkedChildren="开启笔画阴影" unCheckedChildren="关闭笔画阴影" />
-          </FormItem>
 
-          <FormItem 
-            // label={'是否展示笔画顺序'}
-            name="showStrokeOrder"
-          >
-            <Switch checkedChildren="开启笔画顺序" unCheckedChildren="关闭笔画顺序"/>
-          </FormItem>
+
+          <Row>
+            <Col span={12}>
+              <FormItem
+                // label={'是否展示笔画'}
+                name="showStrokeOrderShadow"
+              >
+                <Switch checkedChildren="开启笔画阴影" unCheckedChildren="关闭笔画阴影" />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                // label={'笔画数量'}
+                name="strokeNumber"
+              >
+                <InputNumber
+                  placeholder='笔画阴影展示数量'
+                  min={1} max={100} style={{ width: '100%' }} />
+              </FormItem>
+            </Col>
+          </Row>
+
 
           {/* 字体大小 */}
           {/* <FormItem
