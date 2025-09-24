@@ -54,7 +54,7 @@ const FormBox: React.FC = (): React.ReactNode => {
       wordsPreColAndRow: `${wordsPerRow}x${wordsPreCol}`,
 
       pinyin: templateConfig.pinyin,
-      showStrokeShadow: templateConfig.showStrokeShadow,
+      showStrokeOrderShadow: templateConfig.showStrokeOrderShadow,
       // strokeNumber: templateConfig.strokeNumber,
       showStrokeOrder: templateConfig.showStrokeOrder,
     });
@@ -90,7 +90,7 @@ const FormBox: React.FC = (): React.ReactNode => {
         wordsPerRow,
         wordsPreCol,
         pinyin: values.pinyin,
-        showStrokeShadow: values.showStrokeShadow,
+        showStrokeOrderShadow: values.showStrokeOrderShadow,
         // strokeNumber: values.strokeNumber,
         showStrokeOrder: values.showStrokeOrder,
       });
@@ -200,7 +200,7 @@ const FormBox: React.FC = (): React.ReactNode => {
 
           <FormItem 
             // label={'是否展示笔画'}
-            name="showStrokeShadow"
+            name="showStrokeOrderShadow"
           >
             <Switch checkedChildren="开启笔画阴影" unCheckedChildren="关闭笔画阴影" />
           </FormItem>

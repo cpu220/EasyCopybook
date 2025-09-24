@@ -145,7 +145,7 @@ export const createMultiColorStrokeSVG = (strokePaths: string[], size: number, c
       
     }
 
-    console.log('createMultiColorStrokeSVG', index, strokeColor,arr.length)
+    // console.log('createMultiColorStrokeSVG', index, strokeColor,arr.length)
     
 
     path.style.fill = strokeColor;
@@ -491,20 +491,28 @@ export const renderHanziInContainer = async (ContainerId: string, renderConfig: 
     return new Promise<void>((resolve) => {
       setTimeout(() => {
         const gridItem = item as HTMLElement;
-        const char = gridItem.dataset.font || '';
-        const isStrokeOrder = gridItem.dataset.isStrokeOrder === 'true';
+
+        const char = gridItem.dataset.font || ''; // 网格对应的汉字
+        const originalChar = gridItem.dataset.originalChar || ''; // 网格对应的原始字符
+
+        const isStrokeOrderShadow = gridItem.dataset.isStrokeOrderShadow === 'true';
         const strokeOrderIndex = parseInt(gridItem.dataset.strokeOrder || '0');
 
-        if (char && isStrokeOrder && strokeOrderIndex > 0) {
+        console.log('renderHanziInContainer', char, originalChar,isStrokeOrderShadow,strokeOrderIndex);
+
+        if (!char&& originalChar && isStrokeOrderShadow && strokeOrderIndex > 0) {
+          // 展示汉字不存在，原始汉字存在，当前网格是笔画阴影，笔画数大于0，则进行笔画渲染
           // 笔画顺序格子的特殊处理
           console.log('渲染笔画顺序格子', char, strokeOrderIndex);
+          
           gridItem.innerHTML = '';
-          renderStrokeProgressInContainer(gridItem.id, char, strokeOrderIndex, renderConfig);
+          renderStrokeProgressInContainer(gridItem.id, originalChar, strokeOrderIndex, renderConfig);
         } else if (char) {
-          // 普通汉字格子
+          // 展示汉字存在，渲染为普通汉字格子
           gridItem.innerHTML = '';
           renderHanziForItem(gridItem.id, char, renderConfig);
         } else {
+          // 目前只有2种类型，其他的均渲染为空格子
           // 空格子，渲染为米字格
           console.log('字符为空,渲染为米字格', char)
           const { width, height } = renderConfig.fontStyleConfig

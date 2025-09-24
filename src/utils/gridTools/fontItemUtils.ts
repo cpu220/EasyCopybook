@@ -7,20 +7,20 @@ import { IFontItem } from '@/interface';
  * 创建字体项
  * @param options 配置选项
  * @param options.char 字符内容
- * @param options.isStrokeOrder 是否为笔画顺序项
+ * @param options.isStrokeOrderShadow 是否为笔画顺序项
  * @param options.strokeOrderIndex 笔画索引
  * @param options.originalChar 原始字符
  * @returns 字体项对象
  */
 export const createFontItem = ({ 
   char = '', 
-  isStrokeOrder = false, 
+  isStrokeOrderShadow = false, 
   strokeOrderIndex = 0, 
   originalChar = '' 
 }: Partial<IFontItem>): IFontItem => {
   return {
     char,
-    isStrokeOrder,
+    isStrokeOrderShadow,
     strokeOrderIndex,
     originalChar
   };
@@ -52,7 +52,7 @@ export const createEmptyFontItem = (): IFontItem => {
 export const createStrokeOrderFontItem = (originalChar: string, strokeOrderIndex: number): IFontItem => {
   return createFontItem({
     char: '', // 空字符，实际内容由渲染组件处理
-    isStrokeOrder: true,
+    isStrokeOrderShadow: true,
     strokeOrderIndex,
     originalChar
   });

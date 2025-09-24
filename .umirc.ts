@@ -16,4 +16,6 @@ export default defineConfig({
   // 启用相关配置
   initialState: {},
   model: {},
+  // 禁用 MFSU 功能，解决模块加载问题
+  // mfsu: false,
 });

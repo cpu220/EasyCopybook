@@ -38,11 +38,11 @@ export class MultiRowsOneWordStrategy extends BaseGridLayoutStrategy {
    * 创建字符数组 - 每个字占据多行，每行的第一个单元格显示相同的字
    * @param str 输入的字符串
    * @param column 列数
-   * @param showStrokeOrder 是否显示笔画顺序
+   * @param showStrokeOrderShadow 是否显示笔画顺序
    * @param strokeNumber 笔画数量
    * @returns 二维数组，每个字占据多行
    */
-  createCharArray(str: string, column: number, showStrokeOrder?: boolean, strokeNumber?: number): IFontItem[][] {
+  createCharArray(str: string, column: number, showStrokeOrderShadow?: boolean, strokeNumber?: number): IFontItem[][] {
     const result: IFontItem[][] = [];
     const strLength = str.length;
     
@@ -53,7 +53,8 @@ export class MultiRowsOneWordStrategy extends BaseGridLayoutStrategy {
         const rowItem: IFontItem[] = [this.createFontItem(char)];
         
         // 如果启用了笔画顺序展示，并且有strokeNumber参数
-        if (showStrokeOrder && strokeNumber && strokeNumber > 0) {
+        if (showStrokeOrderShadow && strokeNumber && strokeNumber > 0) {
+           
           const maxStrokeCells = this.calculateMaxStrokeCells(char, strokeNumber, column - 1);
           this.addStrokeOrderCells(rowItem, char, strokeNumber, maxStrokeCells);
         }
@@ -103,11 +104,11 @@ export class FewWordsPerRowStrategy extends BaseGridLayoutStrategy {
    * 创建字符数组 - 每行显示固定数量的汉字，汉字之间平均分布空格
    * @param str 输入的字符串
    * @param column 列数
-   * @param showStrokeOrder 是否显示笔画顺序
+   * @param showStrokeOrderShadow 是否显示笔画顺序
    * @param strokeNumber 笔画数量
    * @returns 二维数组，每行显示固定数量的汉字，汉字之间有空格
    */
-  createCharArray(str: string, column: number, showStrokeOrder?: boolean, strokeNumber?: number): IFontItem[][] {
+  createCharArray(str: string, column: number, showStrokeOrderShadow?: boolean, strokeNumber?: number): IFontItem[][] {
     const result: IFontItem[][] = [];
     const strLength = str.length;
     
@@ -127,7 +128,7 @@ export class FewWordsPerRowStrategy extends BaseGridLayoutStrategy {
           rowItem.push(this.createFontItem(currentChar));
           
           // 如果启用了笔画顺序展示，并且是第一个字且有足够空间
-          if (showStrokeOrder && strokeNumber && strokeNumber > 0) {
+          if (showStrokeOrderShadow && strokeNumber && strokeNumber > 0) {
             const maxStrokeCells = this.calculateMaxStrokeCells(currentChar, strokeNumber, halfColumn - 1);
             this.addStrokeOrderCells(rowItem, currentChar, strokeNumber, maxStrokeCells);
             // 补齐剩余空格到halfColumn
@@ -154,7 +155,7 @@ export class FewWordsPerRowStrategy extends BaseGridLayoutStrategy {
           rowItem.push(this.createFontItem(currentChar));
           
           // 如果启用了笔画顺序展示，并且还有空间
-          if (showStrokeOrder && strokeNumber && strokeNumber > 0) {
+          if (showStrokeOrderShadow && strokeNumber && strokeNumber > 0) {
             const remainingSpace = column - rowItem.length;
             const maxStrokeCells = this.calculateMaxStrokeCells(currentChar, strokeNumber, remainingSpace);
             this.addStrokeOrderCells(rowItem, currentChar, strokeNumber, maxStrokeCells);
@@ -189,7 +190,7 @@ export class FewWordsPerRowStrategy extends BaseGridLayoutStrategy {
             rowItem.push(this.createFontItem(currentChar));
             
             // 如果启用了笔画顺序展示，并且不是最后一个字
-            if (showStrokeOrder && strokeNumber && strokeNumber > 0 && k < wordsCount - 1) {
+            if (showStrokeOrderShadow && strokeNumber && strokeNumber > 0 && k < wordsCount - 1) {
               const maxStrokeCells = this.calculateMaxStrokeCells(currentChar, strokeNumber, spacesPerGap);
               this.addStrokeOrderCells(rowItem, currentChar, strokeNumber, maxStrokeCells);
               // 补齐剩余空格
@@ -324,7 +325,7 @@ export class GridLayoutStrategyFactory {
  * @returns 二维数组，每个元素是一个字符
  */
 export const formatGridData = (str: string, templateConfig: IDefaultTemplateConfig, charStrokeCounts?: Map<string, number>) => {
-  const { column, wordsPerRow, wordsPreCol, showStrokeOrder, strokeNumber } = templateConfig
+  const { column, wordsPerRow, wordsPreCol, showStrokeOrderShadow, strokeNumber } = templateConfig
   // 获取对应的布局策略
   const strategy = GridLayoutStrategyFactory.getStrategy({ 
     wordsPerRow, 
@@ -333,7 +334,7 @@ export const formatGridData = (str: string, templateConfig: IDefaultTemplateConf
     charStrokeCounts
   });
   // 创建字符数组
-    const charArr = strategy.createCharArray(str, column, showStrokeOrder, strokeNumber);
+    const charArr = strategy.createCharArray(str, column, showStrokeOrderShadow, strokeNumber);
   // 返回格式化后的二维数组
   return charArr;
 }

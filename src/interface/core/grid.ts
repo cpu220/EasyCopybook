@@ -18,7 +18,7 @@ export interface IFontItem {
     /** 部首 */
     radical?: string;
     /** 是否为笔画顺序格子 */
-    isStrokeOrder?: boolean;
+    isStrokeOrderShadow?: boolean;
     /** 笔画顺序索引（从1开始，表示第几笔） */
     strokeOrderIndex?: number;
     /** 原始汉字（用于笔画顺序格子记录对应的汉字） */
@@ -39,9 +39,12 @@ export interface IDefaultTemplateConfig {
     column: number; // 模板列数
     wordsPerRow: number; // 每个字占几行
     wordsPreCol: number; // 一行几个字 
+
     pinyin: boolean; // 是否展示拼音
-    showStrokeShadow: boolean; // 是否展示笔画阴影（米字格内展示的笔画）
+
+    showStrokeOrderShadow: boolean; // 是否展示笔画阴影（米字格内展示的笔画）
     strokeNumber: number; // 展示几笔 (当 showStrokeShadow 为true时有效)
+
     showStrokeOrder: boolean; // 是否展示笔画顺序(顶部tips区域展示的笔画顺序，如果为true，则展示全部笔画)
 }
 

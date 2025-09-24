@@ -29,14 +29,16 @@ const createGridItem = (item: IFontItem, row: number, col: number) => {
     const key = `grid-item-${row}-${col}`
     
     // 如果是笔画顺序格子，需要特殊处理
-    if (item.isStrokeOrder && item.originalChar && item.strokeOrderIndex) {
+    if (item.isStrokeOrderShadow && item.originalChar && item.strokeOrderIndex) {
+        // debugger
         return (
             <div
                 id={key}
                 key={key}
-                data-font={item.originalChar}
+                data-font={item.char}
+                data-original-char={item.originalChar}
                 data-stroke-order={item.strokeOrderIndex}
-                data-is-stroke-order="true"
+                data-is-stroke-order-shadow="true"
                 className={cellClassName}>
                 {/* 笔画顺序格子内容为空，由渲染引擎处理 */}
             </div>
@@ -68,7 +70,7 @@ const createGridRow = ({ arr, row, templateConfig, char }: {
     templateConfig: IDefaultTemplateConfig,
     char: string
 }) => {
-    const { pinyin, showStrokeShadow, strokeNumber, showStrokeOrder } = templateConfig;
+    const { pinyin,  showStrokeOrder } = templateConfig;
 
 
     const resultDOM = []
@@ -117,7 +119,7 @@ const createGridRow = ({ arr, row, templateConfig, char }: {
 export const createGrid = (list: string, templateConfig: IDefaultTemplateConfig, charStrokeCounts?: Map<string, number>) => {
 
     const arr = formatGridData(list, templateConfig, charStrokeCounts)
-
+    console.log(arr)
     const result = []
 
     for (let y = 0; y < arr.length; y++) {

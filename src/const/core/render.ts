@@ -54,10 +54,12 @@ const DefaultTemplateConfig: IDefaultTemplateConfig = {
     column: DefaultGridConfig.defaultCol,
     wordsPerRow: 1, // 每个字占几行
     wordsPreCol: 1, // 一行几个字 
-    pinyin:true, // 是否展示拼音
-    showStrokeShadow:true, // 是否展示笔画（米字格内展示的笔画）
-    strokeNumber:3, // 展示几笔 (当 showStrokeShadow 为true时有效)
-    showStrokeOrder:true, // 是否展示笔画顺序(顶部tips区域展示的笔画顺序，如果为true，则展示全部笔画)
+    pinyin: true, // 是否展示拼音
+
+    showStrokeOrderShadow: true, // 是否展示笔画（米字格内展示的笔画）
+    strokeNumber: 3, // 展示几笔 (当 showStrokeShadow 为true时有效)
+
+    showStrokeOrder: true, // 是否展示笔画顺序(顶部tips区域展示的笔画顺序，如果为true，则展示全部笔画)
 }
 
 
