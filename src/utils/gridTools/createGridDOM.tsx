@@ -27,7 +27,23 @@ const rowTipClassName = gridStyles['grid-row-tip-container']
      */
 const createGridItem = (item: IFontItem, row: number, col: number) => {
     const key = `grid-item-${row}-${col}`
-    // console.log('createGridItem', key)
+    
+    // 如果是笔画顺序格子，需要特殊处理
+    if (item.isStrokeOrder && item.originalChar && item.strokeOrderIndex) {
+        return (
+            <div
+                id={key}
+                key={key}
+                data-font={item.originalChar}
+                data-stroke-order={item.strokeOrderIndex}
+                data-is-stroke-order="true"
+                className={cellClassName}>
+                {/* 笔画顺序格子内容为空，由渲染引擎处理 */}
+            </div>
+        )
+    }
+    
+    // 普通格子的处理逻辑
     return (
         <div
             id={key}
@@ -98,9 +114,9 @@ const createGridRow = ({ arr, row, templateConfig, char }: {
  * 创建网格 网格项数组
  * @returns 
  */
-export const createGrid = (list: string, templateConfig: IDefaultTemplateConfig) => {
+export const createGrid = (list: string, templateConfig: IDefaultTemplateConfig, charStrokeCounts?: Map<string, number>) => {
 
-    const arr = formatGridData(list, templateConfig)
+    const arr = formatGridData(list, templateConfig, charStrokeCounts)
 
     const result = []
 

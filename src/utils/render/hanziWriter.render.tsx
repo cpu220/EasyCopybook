@@ -492,14 +492,20 @@ export const renderHanziInContainer = async (ContainerId: string, renderConfig: 
       setTimeout(() => {
         const gridItem = item as HTMLElement;
         const char = gridItem.dataset.font || '';
+        const isStrokeOrder = gridItem.dataset.isStrokeOrder === 'true';
+        const strokeOrderIndex = parseInt(gridItem.dataset.strokeOrder || '0');
 
-        if (char) {
-          // 清空网格项内容
+        if (char && isStrokeOrder && strokeOrderIndex > 0) {
+          // 笔画顺序格子的特殊处理
+          console.log('渲染笔画顺序格子', char, strokeOrderIndex);
           gridItem.innerHTML = '';
-
-          // 使用渲染函数替换每个字符
+          renderStrokeProgressInContainer(gridItem.id, char, strokeOrderIndex, renderConfig);
+        } else if (char) {
+          // 普通汉字格子
+          gridItem.innerHTML = '';
           renderHanziForItem(gridItem.id, char, renderConfig);
         } else {
+          // 空格子，渲染为米字格
           console.log('字符为空,渲染为米字格', char)
           const { width, height } = renderConfig.fontStyleConfig
           createEmptyGridInContainer(
@@ -829,7 +835,12 @@ export const renderStrokeProgressInContainer = async (
   strokeCount: number,
   renderConfig: any = {}
 ): Promise<void> => {
-  const { fontStyleConfig, borderStyleConfig, backgroundType } = renderConfig;
+  // 添加默认值，确保对象存在
+  const { 
+    fontStyleConfig = DEFAULT_CONFIG.renderConfig.fontStyleConfig,
+    borderStyleConfig = DEFAULT_CONFIG.renderConfig.borderStyleConfig,
+    backgroundType = DEFAULT_CONFIG.renderConfig.backgroundType 
+  } = renderConfig;
 
   const container = document.getElementById(containerId);
   if (!container) {
@@ -873,7 +884,7 @@ export const renderStrokeProgressInContainer = async (
         svg,
         fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
         fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
-        borderStyleConfig.lineColor || DEFAULT_CONFIG.renderConfig.borderStyleConfig.lineColor);
+        borderStyleConfig);
     }
 
     // 创建笔画SVG并添加到容器
@@ -894,11 +905,11 @@ export const renderStrokeProgressInContainer = async (
     container.appendChild(svg);
   } catch (error) {
     console.error(`渲染笔画进度失败:`, error);
-    // 出错时渲染空的米字格
+    // 出错时渲染空的米字格，确保使用默认配置
     createEmptyGridInContainer(
       containerId,
-      fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
-      fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
+      fontStyleConfig?.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
+      fontStyleConfig?.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
       borderStyleConfig,
     );
   }

@@ -17,6 +17,12 @@ export interface IFontItem {
     pinyin?: string;
     /** 部首 */
     radical?: string;
+    /** 是否为笔画顺序格子 */
+    isStrokeOrder?: boolean;
+    /** 笔画顺序索引（从1开始，表示第几笔） */
+    strokeOrderIndex?: number;
+    /** 原始汉字（用于笔画顺序格子记录对应的汉字） */
+    originalChar?: string;
 }
 
 /**
