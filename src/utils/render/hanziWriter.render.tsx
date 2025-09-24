@@ -7,6 +7,7 @@ import HanziWriter from 'hanzi-writer';
 import { message } from 'antd'
 import { DEFAULT_CONFIG, BACKGROUND_TYPE } from '@/const';
 import { IDefaultBorderStyleConfig, IRenderConfig } from '@/interface'
+import { RENDER_SIZES } from '@/const/core/render';
 
 // 使用统一的默认配置选项
 const defaultOptions = DEFAULT_CONFIG.renderConfig.fontStyleConfig;
@@ -349,14 +350,14 @@ export const renderHanziForItem = (svgId: string, character: string, renderConfi
 
   try {
     // 统一字体大小计算：直接使用 fontSize 参数
-    const fontSize = _opt.fontSize || _opt.width || 100;
+    const fontSize = _opt.fontSize || _opt.width || RENDER_SIZES.grid.width;
 
     // 创建配置对象
     const writerOptions = {
       ..._opt,
       width: fontSize,
       height: fontSize,
-      padding: _opt.padding || 5,
+      padding: _opt.padding || RENDER_SIZES.spacing.gridRowPadding,
       charDataLoader: () => { }
     };
 

@@ -1,18 +1,16 @@
-// @import '@/src/pages/content/components/color.less';
-@charsheet-font-scale: 1;
-
+@import "@/pages/base.less";
 // 笔画顺序展示组件样式
 .grid-row-storke {
   display: flex;
   justify-content: center;
-  width: calc( (720px - 90px) * @charsheet-font-scale );
+  width: calc(@grid-stroke-order-container-width * @charsheet-font-scale);
   // border: solid 1px #ff0;
 }
 
 .stroke-order-container {
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: @stroke-order-font-size;
   // color: #666;
   // line-height: 1.5;
 }
@@ -29,23 +27,23 @@
 .stroke-order-strokes {
   display: flex;
   // align-items: center;
-  margin-left: 8px;
+  margin-left: @stroke-order-margin-left;
   flex-wrap: wrap;
   // gap: 8px;
   width: 100%;
-  padding:2px 0;
+  padding: @stroke-order-padding 0;
 }
 
 .stroke-order-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 4px;
+  margin: @stroke-order-margin;
 }
 
 .stroke-order-svg {
-  width: 20px;
-  height: 20px;
+  width: @stroke-order-svg-size;
+  height: @stroke-order-svg-size;
   display: flex;
   align-items: center;
   justify-content: center;

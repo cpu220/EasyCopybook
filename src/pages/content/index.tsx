@@ -30,14 +30,14 @@ const ContentBox: React.FC = () => {
 
     // 在组件挂载后，当DOM渲染完成时自动触发handleTransition
     useEffect(() => {  
-        triggerTransition();
+        // triggerTransition();
     }, []); // 只在组件挂载后执行一次
 
     const triggerTransition = async () => {
         try {
             // 确保DOM已经渲染完成
             await new Promise(resolve => setTimeout(resolve, 0));
-            await handleTransition();
+            // await handleTransition();
         } catch (error) {
             console.error('自动触发转换失败:', error);
         }
@@ -56,7 +56,7 @@ const ContentBox: React.FC = () => {
             backgroundType
         };
         console.log('finalRenderConfig',finalRenderConfig) 
-        await renderHanziInContainer(key, finalRenderConfig)
+        // await renderHanziInContainer(key, finalRenderConfig)
     }
 
 

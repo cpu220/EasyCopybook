@@ -9,7 +9,8 @@ import type { Color } from 'antd/es/color-picker';
 import { ReloadOutlined } from '@ant-design/icons';
 import { useModel } from 'umi';
 import { FONT_LIBRARY } from '@/const';
-import { clearStringForLibrary, generateRandomChineseChar } from '@/utils'
+import { clearStringForLibrary, generateRandomChineseChar } from '@/utils';
+import { RENDER_SIZES } from '@/const/core/render';
 
 const FormItem = Form.Item;
 
@@ -144,7 +145,7 @@ const FormBox: React.FC = (): React.ReactNode => {
   }
 
   return (
-    <div style={{ padding: '16px' }}>
+    <div style={{ padding: `${RENDER_SIZES.spacing.formPadding}px` }}>
       <Card title="字帖配置表单" size="small">
         <Form
           form={form}
@@ -176,7 +177,7 @@ const FormBox: React.FC = (): React.ReactNode => {
 
           >
             <InputNumber
-              min={1}
+              min={RENDER_SIZES.component.inputNumberMin}
               max={2000}
               prefix="生成随机"
               controls={false}

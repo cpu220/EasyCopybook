@@ -1,4 +1,5 @@
 import { defineConfig } from '@umijs/max';
+import path from 'path';
 
 export default defineConfig({
   routes: [
@@ -8,6 +9,10 @@ export default defineConfig({
     // { path: '/foot', component: 'foot' },
   ],
   npmClient: 'yarn',
+  // 配置路径别名
+  alias: {
+    '@': path.resolve(__dirname, 'src'),
+  },
   // 根据官方文档，需要同时启用 initial-state 和 model 插件
   plugins: [
     '@umijs/plugins/dist/initial-state',

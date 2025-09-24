@@ -11,16 +11,42 @@ import {
     IDEFAULT_CONFIG
 } from '@/interface';
 
+
+const scale = 1
 /**
- * 默认参数
+ * 网格基础配置
+ * 与字帖渲染直接相关的基础尺寸配置
+ * 注意：这里的值需要与 base.less 中的网格配置保持一致
  */
 const DefaultGridConfig = {
-    width: 60,
-    height: 60,
-    fontSize: 60,
-    defaultCol: 10
+    width: 60 * scale,   // 与 @grid-base-width 对应
+    height: 60 * scale, // 与 @grid-base-height 对应
+    fontSize: 60 * scale, // 与 @grid-base-font-size 对应
+    defaultCol: 10, // 与 @grid-default-col 对应
+    scale: scale, // 与 @charsheet-font-scale 对应 - 控制整体字体大小缩放
+    
 };
 
+/**
+ * 间距配置
+ * 仅保留与字帖渲染相关的间距配置
+ */
+const DefaultSpacingConfig = {
+    // 通用内边距 - 被hanziWriter.render.tsx使用
+    gridRowPadding: 10,     // 网格行内边距
+    formPadding: 16,        // 表单内边距 - 被form和foot组件使用
+};
+
+/**
+ * 组件特定尺寸配置
+ * 仅保留与字帖渲染相关的组件尺寸配置
+ */
+const DefaultComponentSizes = {
+    // 表单组件 - 被form组件使用
+    inputNumberMin: 1,      // 数字输入最小值
+};
+
+// 颜色配置保留但不导出到RENDER_SIZES中
 const DefaultCharsheetColors = {
     BORDER_COLOR: '#ddd',
     GRID_COLOR: '#ddd'
@@ -150,6 +176,18 @@ export const DEFAULT_CONFIG: IDEFAULT_CONFIG = {
 
     }
 };
+
+/**
+ * 导出所有尺寸配置，供其他模块使用
+ */
+export const RENDER_SIZES = {
+    // 网格基础配置 - 与字帖渲染直接相关的尺寸
+    grid: DefaultGridConfig,
+    // 间距配置 - 与字帖渲染相关的间距
+    spacing: DefaultSpacingConfig,
+    // 组件特定尺寸配置 - 与字帖渲染相关的组件尺寸
+    component: DefaultComponentSizes,
+} as const;
 
 
 

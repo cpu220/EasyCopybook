@@ -1,23 +1,23 @@
-@import "../../color.less";
+@import "@/pages/base.less";
 
 .grid-container {
     // border:solid 1px #000;
-    width:calc(720px * @charsheet-font-scale);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width:calc(@grid-container-width * @charsheet-font-scale);
+    box-shadow: 0 0 @box-shadow-blur rgba(0, 0, 0, 0.1);
 }
 
 .grid-row {
-    padding: 10px;
+    padding: @grid-row-padding;
     width: 100%;
     // display: flex;
-    margin-bottom: calc(10px * @charsheet-font-scale);
+    margin-bottom: calc(@grid-margin-bottom * @charsheet-font-scale);
     // border: solid 1px #f00;
     position: relative;
 }
 
 /* 每5行增加更大的底部间距 */
 .grid-row:nth-child(6n) {
-    margin-bottom: calc(20px * @charsheet-font-scale);
+    margin-bottom: calc(@grid-margin-bottom-large * @charsheet-font-scale);
 }
 
 
@@ -29,11 +29,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-left: calc(6px * @charsheet-font-scale);
+        margin-left: calc(@grid-margin-left * @charsheet-font-scale);
         /* 默认居左6px */
-        width: calc(60px * @charsheet-font-scale);
-        height: calc(60px * @charsheet-font-scale);
-        font-size: calc(60px * @charsheet-font-scale * 0.8);
+        width: calc(@grid-base-width * @charsheet-font-scale);
+        height: calc(@grid-base-height * @charsheet-font-scale);
+        font-size: calc(@grid-base-font-size * @charsheet-font-scale * 0.8);
         position: relative;
         overflow: hidden;
     }
@@ -44,7 +44,7 @@
     }
 
     .grid-item:nth-child(5n) {
-        margin-right: calc(12px * @charsheet-font-scale);
+        margin-right: calc(@grid-margin-right * @charsheet-font-scale);
     }
 }
  

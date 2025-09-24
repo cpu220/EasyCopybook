@@ -6,6 +6,7 @@
 import React from 'react';
 import { Card, Typography, Empty } from 'antd';
 import { useGlobalValue } from '@/context/GlobalContext';
+import { RENDER_SIZES } from '@/const/core/render';
 
 const { Text, Paragraph } = Typography;
 
@@ -17,7 +18,7 @@ const FooterBox: React.FC = (): React.ReactNode => {
   console.log('FooterBox 重新渲染，当前值:', formValue);
   
   return (
-    <div style={{ padding: '16px' }}>
+    <div style={{ padding: `${RENDER_SIZES.spacing.formPadding}px` }}>
       这是底部footer 
       {formValue},{hasValue}
     </div>

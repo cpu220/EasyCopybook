@@ -1,5 +1,7 @@
+@import "@/pages/base.less";
+
 .layout {
-    border-radius: 8px;
+    border-radius: @border-radius;
     overflow: 'hidden';
     //   width: calc(50% - 8px);
     //   max-width: calc(50% - 8px);
@@ -9,15 +11,15 @@
 .header {
     text-align: center;
     color: #fff;
-    height: 64px;
-    padding-inline: 48px;
-    line-height: 64px;
+    height: @header-height;
+    padding-inline: @header-padding;
+    line-height: @header-height;
     background-color: #111111;
 }
 
 .content {
     // text-align: center;
-    min-height: 120px;
+    min-height: @min-height;
     // line-height: 120px;
     // color: #fff;
     // background-color: #111111;
@@ -28,7 +30,7 @@
     // line-height: 120px;
     // color: #fff;
     // background-color: #fff;
-    padding: 4px;
+    padding: @sider-padding;
 
     // width: 300px;
 }
