@@ -63,7 +63,8 @@ const DefaultPracticeConfig = {
 // 颜色配置保留但不导出到RENDER_SIZES中
 const DefaultCharsheetColors = {
     BORDER_COLOR: '#ddd',
-    GRID_COLOR: '#ddd'
+    GRID_COLOR: '#ddd',
+    SHADOW_COLOR: '#dfdfdf', // 阴影颜色
 } as const;
 
 
@@ -83,10 +84,12 @@ const DefaultTemplateConfig: IDefaultTemplateConfig = {
 
     showStrokeOrder: true, // 是否展示笔画顺序(顶部tips区域展示的笔画顺序，如果为true，则展示全部笔画)
 
-    templateLayoutType: TEMPLATE_LAYOUT_TYPE.NORMAL, // 模板类型
+    templateLayoutType: TEMPLATE_LAYOUT_TYPE.NORMAL, // 模板类型 是什么字帖
 }
 
-
+// 1. 先选择什么类型字帖
+// 2. 再选择布局
+// 3. 选择渲染引擎
 
 
 /**
@@ -115,7 +118,9 @@ const DefaultStrokeFontRenderConfig: IDefaultStrokeFontRenderConfig = {
     showOutline: false, // 显示汉字轮廓
     radicalColor: '#3889f2', // 偏旁颜色
     fontSizeRatio: 1, // 默认字体大小比例
-    showBorder: true
+    showBorder: true,
+    
+    fontShadowColor: DefaultCharsheetColors.SHADOW_COLOR, // 字体阴影颜色
     // 其他配置...
 };
 

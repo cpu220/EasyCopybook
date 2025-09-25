@@ -27,6 +27,7 @@ export interface IDefaultStrokeFontRenderConfig extends IBaseFontRenderConfig {
     radicalColor: string;
     fontSizeRatio: number;
     showBorder: boolean;
+    fontShadowColor: string; // 字体阴影颜色
 
 }
 

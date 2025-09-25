@@ -923,7 +923,8 @@ export const renderStrokeProgressInContainer = async (params: {
       strokesPortion,
       fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
       {
-        fillColor: fontStyleConfig.strokeColor || DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor
+        fillColor:fontStyleConfig.fontShadowColor || DEFAULT_CONFIG.renderConfig.fontStyleConfig.fontShadowColor,
+        // fillColor: '#F00',// fontStyleConfig.strokeColor || DEFAULT_CONFIG.renderConfig.fontStyleConfig.strokeColor
       }
     );
 
