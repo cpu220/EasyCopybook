@@ -78,7 +78,19 @@ export class GridLayoutStrategyFactory {
  * @param charStrokeCounts 可选，汉字及其实际笔画数的映射
  * @returns 二维数组，每个元素是一个字符
  */
-export const formatGridData = (str: string, templateConfig: IDefaultTemplateConfig, charStrokeCounts?: Map<string, number>) => {
+/**
+ * 格式化网格数据
+ * @param params 参数对象
+ * @param params.str 字符串
+ * @param params.templateConfig 模板配置
+ * @param params.charStrokeCounts 字符笔画数映射
+ */
+export const formatGridData = (params: {
+  str: string;
+  templateConfig: IDefaultTemplateConfig;
+  charStrokeCounts?: Map<string, number>;
+}) => {
+  const { str, templateConfig, charStrokeCounts } = params;
   const { column, wordsPerRow, wordsPreCol, showStrokeOrderShadow, templateLayoutType,strokeNumber } = templateConfig
   console.log('formatGridData', templateConfig);
   // 获取对应的布局策略
@@ -90,7 +102,12 @@ export const formatGridData = (str: string, templateConfig: IDefaultTemplateConf
     charStrokeCounts
   });
   // 创建字符数组
-    const charArr = strategy.createCharArray(str, column, showStrokeOrderShadow, strokeNumber);
+    const charArr = strategy.createCharArray({
+      str,
+      column,
+      showStrokeOrderShadow,
+      strokeNumber
+    });
   // 返回格式化后的二维数组
   return charArr;
 }

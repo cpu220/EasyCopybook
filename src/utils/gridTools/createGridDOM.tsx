@@ -116,9 +116,21 @@ const createGridRow = ({ arr, row, templateConfig, char }: {
  * 创建网格 网格项数组
  * @returns 
  */
-export const createGrid = (list: string, templateConfig: IDefaultTemplateConfig, charStrokeCounts?: Map<string, number>) => {
+/**
+ * 创建网格
+ * @param params 参数对象
+ * @param params.list 字符列表
+ * @param params.templateConfig 模板配置
+ * @param params.charStrokeCounts 字符笔画数映射
+ */
+export const createGrid = (params: {
+  list: string;
+  templateConfig: IDefaultTemplateConfig;
+  charStrokeCounts?: Map<string, number>;
+}) => {
+  const { list, templateConfig, charStrokeCounts } = params;
 
-    const arr = formatGridData(list, templateConfig, charStrokeCounts)
+    const arr = formatGridData({ str: list, templateConfig, charStrokeCounts })
     console.log('createGrid', arr)
     // 检查arr是否为空数组或undefined
     if (!arr || arr.length === 0) {

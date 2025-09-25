@@ -58,13 +58,18 @@ export const FormBox: React.FC = (): React.ReactNode => {
         form.setFieldsValue({
             fontLibrary: fontLibraryItem?.code || FONT_LIBRARY[0].code,
             diyFontLibrary: getStr(type, fontLibraryItem.list),
-            randomFontLibrary: fontLibraryItem.list.length,
+            randomFontLibraryNum: fontLibraryItem.list.length,
+
             // fontSize: fontStyleConfig.fontSize,
             strokeColor: fontStyleConfig.strokeColor,
             radicalColor: fontStyleConfig.radicalColor,
+
             wordsPreColAndRow: `${wordsPerRow}x${wordsPreCol}`,
+
             templateLayoutType: type,
+
             pinyin: templateConfig.pinyin,
+
             showStrokeOrderShadow: templateConfig.showStrokeOrderShadow,
             strokeNumber: templateConfig.strokeNumber,
             showStrokeOrder: templateConfig.showStrokeOrder,
@@ -375,7 +380,7 @@ export const FormBox: React.FC = (): React.ReactNode => {
                     </FormItem>
                     <FormItem
                         // label="随机字库"
-                        name="randomFontLibrary"
+                        name="randomFontLibraryNum"
 
                     >
                         <InputNumber
@@ -387,7 +392,7 @@ export const FormBox: React.FC = (): React.ReactNode => {
                             style={{ width: '100%', textAlign: "center" }}
                             addonAfter={<ReloadOutlined onClick={
                                 () => handleChangeRandomFontLibrary(
-                                    form.getFieldValue('randomFontLibrary')
+                                    form.getFieldValue('randomFontLibraryNum')
                                 )
                             } />}
                             onChange={(value: number | null) => value && handleChangeRandomFontLibrary(value)} />

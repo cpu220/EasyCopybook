@@ -32,13 +32,20 @@ export class MultiRowsOneWordStrategy extends BaseGridLayoutStrategy {
   
   /**
    * 创建字符数组 - 每个字占据多行，每行的第一个单元格显示相同的字
-   * @param str 输入的字符串
-   * @param column 列数
-   * @param showStrokeOrderShadow 是否显示笔画顺序
-   * @param strokeNumber 笔画数量
+   * @param params 参数对象
+   * @param params.str 输入的字符串
+   * @param params.column 列数
+   * @param params.showStrokeOrderShadow 是否显示笔画顺序
+   * @param params.strokeNumber 笔画数量
    * @returns 二维数组，每个字占据多行
    */
-  createCharArray(str: string, column: number, showStrokeOrderShadow?: boolean, strokeNumber?: number): IFontItem[][] {
+  createCharArray(params: {
+    str: string;
+    column: number;
+    showStrokeOrderShadow?: boolean;
+    strokeNumber?: number;
+  }): IFontItem[][] {
+    const { str, column, showStrokeOrderShadow, strokeNumber } = params;
     const result: IFontItem[][] = [];
     const strLength = str.length;
     

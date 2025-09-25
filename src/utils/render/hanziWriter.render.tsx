@@ -93,7 +93,7 @@ export const createGridSVG = (width: number, height: number, borderStyleConfig: 
   // 为网格SVG添加统一的T-HZ类名
   svg.setAttribute('class', 'T-HZ');
 
-  addGridLinesToSVG(svg, width, height, borderStyleConfig);
+  addGridLinesToSVG({ svg, width, height, borderStyleConfig });
 
   return svg;
 };
@@ -158,12 +158,19 @@ export const createMultiColorStrokeSVG = (strokePaths: string[], size: number, c
 
 /**
  * 向SVG元素添加米字格线条
- * @param svg SVG元素
- * @param width 宽度
- * @param height 高度
- * @param options 选项
+ * @param params 参数对象
+ * @param params.svg SVG元素
+ * @param params.width 宽度
+ * @param params.height 高度
+ * @param params.borderStyleConfig 边框样式配置
  */
-export const addGridLinesToSVG = (svg: SVGElement, width: number, height: number, borderStyleConfig: IDefaultBorderStyleConfig): void => {
+export const addGridLinesToSVG = (params: {
+  svg: SVGElement;
+  width: number;
+  height: number;
+  borderStyleConfig: IDefaultBorderStyleConfig;
+}): void => {
+  const { svg, width, height, borderStyleConfig } = params;
   const {
     lineColor, borderColor, 
     lineWidth,
@@ -239,17 +246,20 @@ export const addGridLinesToSVG = (svg: SVGElement, width: number, height: number
 };
 
 /**
- * 创建空的米字格并添加到容器中
- * @param containerId 容器ID
- * @param width 宽度
- * @param height 高度
- * @param options 选项
+ * 在指定容器中创建空的网格
+ * @param params 参数对象
+ * @param params.containerId 容器ID
+ * @param params.width 宽度
+ * @param params.height 高度
+ * @param params.borderOptions 边框选项
  */
-export const createEmptyGridInContainer = (
-  containerId: string,
-  width: number,
-  height: number,
-  borderOptions: IDefaultBorderStyleConfig): void => {
+export const createEmptyGridInContainer = (params: {
+  containerId: string;
+  width: number;
+  height: number;
+  borderOptions: IDefaultBorderStyleConfig;
+}): void => {
+  const { containerId, width, height, borderOptions } = params;
 
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -337,7 +347,7 @@ export const renderHanziForItem = (svgId: string, character: string, renderConfi
     console.log('字符为空，渲染为空白米字格');
     // 直接创建空白米字格
     const { width, height } = fontStyleConfig;
-    createEmptyGridInContainer(svgId, width, height, borderStyleConfig);
+    createEmptyGridInContainer({ containerId: svgId, width, height, borderOptions: borderStyleConfig });
     return;
   }
 
@@ -507,7 +517,12 @@ export const renderHanziInContainer = async (ContainerId: string, renderConfig: 
           // console.log('渲染笔画顺序格子', char, strokeOrderIndex);
           
           gridItem.innerHTML = '';
-          renderStrokeProgressInContainer(gridItem.id, originalChar, strokeOrderIndex, renderConfig);
+          renderStrokeProgressInContainer({
+            containerId: gridItem.id,
+            character: originalChar,
+            strokeCount: strokeOrderIndex,
+            renderConfig
+          });
         } else if (char) {
           // 展示汉字存在，渲染为普通汉字格子
           gridItem.innerHTML = '';
@@ -517,8 +532,12 @@ export const renderHanziInContainer = async (ContainerId: string, renderConfig: 
           // 空格子，渲染为米字格
           // console.log('字符为空,渲染为米字格', char)
           const { width, height } = renderConfig.fontStyleConfig
-          createEmptyGridInContainer(
-            gridItem.id, width, height, borderStyleConfig)
+          createEmptyGridInContainer({
+            containerId: gridItem.id,
+            width,
+            height,
+            borderOptions: borderStyleConfig
+          });
         }
         resolve();
       }, index * defaultTimes); // 错开执行时间，避免性能问题
@@ -833,17 +852,19 @@ export const generateStrokeData = async (
 
 /**
  * 在指定容器中渲染汉字的笔画进度
- * @param containerId 容器ID
- * @param character 汉字字符
- * @param strokeCount 要显示的笔画数量（1表示显示第1笔，2表示显示第1+2笔）
- * @param renderConfig 渲染选项
+ * @param params 参数对象
+ * @param params.containerId 容器ID
+ * @param params.character 汉字字符
+ * @param params.strokeCount 要显示的笔画数量（1表示显示第1笔，2表示显示第1+2笔）
+ * @param params.renderConfig 渲染选项
  */
-export const renderStrokeProgressInContainer = async (
-  containerId: string,
-  character: string,
-  strokeCount: number,
-  renderConfig: any = {}
-): Promise<void> => {
+export const renderStrokeProgressInContainer = async (params: {
+  containerId: string;
+  character: string;
+  strokeCount: number;
+  renderConfig?: any;
+}): Promise<void> => {
+  const { containerId, character, strokeCount, renderConfig = {} } = params;
   // 添加默认值，确保对象存在
   const { 
     fontStyleConfig = DEFAULT_CONFIG.renderConfig.fontStyleConfig,
@@ -863,12 +884,12 @@ export const renderStrokeProgressInContainer = async (
     if (strokes.length === 0 || strokeCount <= 0) {
       // 如果没有笔画数据或笔画数量为0，渲染空的米字格
       // 兜底用
-      createEmptyGridInContainer(
+      createEmptyGridInContainer({
         containerId,
-        fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
-        fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
-        borderStyleConfig
-      );
+        width: fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
+        height: fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
+        borderOptions: borderStyleConfig
+      });
       return;
     }
 
@@ -889,11 +910,12 @@ export const renderStrokeProgressInContainer = async (
 
     // 添加米字格背景
     if (backgroundType === BACKGROUND_TYPE.DOT_GRID) {
-      addGridLinesToSVG(
+      addGridLinesToSVG({
         svg,
-        fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
-        fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
-        borderStyleConfig);
+        width: fontStyleConfig.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
+        height: fontStyleConfig.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
+        borderStyleConfig
+      });
     }
 
     // 创建笔画SVG并添加到容器
@@ -915,12 +937,12 @@ export const renderStrokeProgressInContainer = async (
   } catch (error) {
     console.error(`渲染笔画进度失败:`, error);
     // 出错时渲染空的米字格，确保使用默认配置
-    createEmptyGridInContainer(
+    createEmptyGridInContainer({
       containerId,
-      fontStyleConfig?.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
-      fontStyleConfig?.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
-      borderStyleConfig,
-    );
+      width: fontStyleConfig?.width || DEFAULT_CONFIG.renderConfig.fontStyleConfig.width,
+      height: fontStyleConfig?.height || DEFAULT_CONFIG.renderConfig.fontStyleConfig.height,
+      borderOptions: borderStyleConfig
+    });
   }
 };
 

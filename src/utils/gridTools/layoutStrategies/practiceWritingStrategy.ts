@@ -34,14 +34,21 @@ export class PracticeWritingStrategy extends BaseGridLayoutStrategy {
   }
   
   /**
-   * 创建字符数组 - 练字贴布局
-   * @param str 输入的字符串
-   * @param column 列数
-   * @param showStrokeOrderShadow 是否显示笔画顺序（此策略中总是显示）
-   * @param strokeNumber 笔画数量（此策略中会显示所有笔画）
-   * @returns 二维数组，每个字占据多行，第一行第一个格子显示汉字，后续格子显示笔画阴影
+   * 创建字符数组
+   * @param params 参数对象
+   * @param params.str 输入字符串
+   * @param params.column 列数
+   * @param params.showStrokeOrderShadow 是否显示笔画顺序阴影
+   * @param params.strokeNumber 笔画数
+   * @returns 二维数组
    */
-  createCharArray(str: string, column: number, showStrokeOrderShadow?: boolean, strokeNumber?: number): IFontItem[][] {
+  createCharArray(params: {
+    str: string;
+    column: number;
+    showStrokeOrderShadow?: boolean;
+    strokeNumber?: number;
+  }): IFontItem[][] {
+    const { str, column, showStrokeOrderShadow, strokeNumber } = params;
     const result: IFontItem[][] = [];
     
     for (let i = 0; i < str.length; i++) {

@@ -24,13 +24,19 @@ export interface GridLayoutStrategy {
   
   /**
    * 创建字符二维数组
-   * @param str 输入的字符串
-   * @param column 列数
-   * @param showStrokeOrderShadow 是否显示笔画顺序阴影
-   * @param strokeNumber 笔画数量
+   * @param params 参数对象
+   * @param params.str 输入的字符串
+   * @param params.column 列数
+   * @param params.showStrokeOrderShadow 是否显示笔画顺序阴影
+   * @param params.strokeNumber 笔画数量
    * @returns 格式化后的二维数组，每个元素包含一个字符
    */
-  createCharArray(str: string, column: number, showStrokeOrderShadow?: boolean, strokeNumber?: number): IFontItem[][];
+  createCharArray(params: {
+    str: string;
+    column: number;
+    showStrokeOrderShadow?: boolean;
+    strokeNumber?: number;
+  }): IFontItem[][];
 }
 
 /**
@@ -55,7 +61,12 @@ export abstract class BaseGridLayoutStrategy implements GridLayoutStrategy {
   /**
    * 创建字符二维数组 - 子类必须实现
    */
-  abstract createCharArray(str: string, column: number, showStrokeOrderShadow?: boolean, strokeNumber?: number): IFontItem[][];
+  abstract createCharArray(params: {
+    str: string;
+    column: number;
+    showStrokeOrderShadow?: boolean;
+    strokeNumber?: number;
+  }): IFontItem[][];
   
   /**
    * 创建标准字体项

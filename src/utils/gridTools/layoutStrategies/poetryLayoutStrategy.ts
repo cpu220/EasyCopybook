@@ -63,13 +63,20 @@ export class PoetryLayoutStrategy extends BaseGridLayoutStrategy {
 
   /**
    * 创建字符数组 - 实现诗词布局
-   * @param str 输入的字符串（这里应该是JSON格式的诗词数据）
-   * @param column 列数
-   * @param showStrokeOrderShadow 是否显示笔画顺序（诗词布局默认不显示）
-   * @param strokeNumber 笔画数量（诗词布局默认不使用）
+   * @param params 参数对象
+   * @param params.str 输入的字符串（这里应该是JSON格式的诗词数据）
+   * @param params.column 列数
+   * @param params.showStrokeOrderShadow 是否显示笔画顺序（诗词布局默认不显示）
+   * @param params.strokeNumber 笔画数量（诗词布局默认不使用）
    * @returns 二维数组，包含诗词标题、作者和内容
    */
-  createCharArray(str: string, column: number, showStrokeOrderShadow?: boolean, strokeNumber?: number): IFontItem[][] {
+  createCharArray(params: {
+    str: string;
+    column: number;
+    showStrokeOrderShadow?: boolean;
+    strokeNumber?: number;
+  }): IFontItem[][] {
+    const { str, column, showStrokeOrderShadow, strokeNumber } = params;
     const result: IFontItem[][] = [];
 
     try {

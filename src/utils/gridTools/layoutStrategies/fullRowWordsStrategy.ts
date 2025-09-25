@@ -22,14 +22,21 @@ export class FullRowWordsStrategy extends BaseGridLayoutStrategy {
   }
   
   /**
-   * 创建字符数组 - 按行列顺序填充所有字符，没有额外空格
-   * @param str 输入的字符串
-   * @param column 列数
-   * @param showStrokeOrder 是否显示笔画顺序
-   * @param strokeNumber 笔画数量
-   * @returns 二维数组，按顺序填充所有字符
+   * 创建字符数组
+   * @param params 参数对象
+   * @param params.str 输入字符串
+   * @param params.column 列数
+   * @param params.showStrokeOrder 是否显示笔画顺序
+   * @param params.strokeNumber 笔画数
+   * @returns 二维数组
    */
-  createCharArray(str: string, column: number, showStrokeOrder?: boolean, strokeNumber?: number): IFontItem[][] {
+  createCharArray(params: {
+    str: string;
+    column: number;
+    showStrokeOrder?: boolean;
+    strokeNumber?: number;
+  }): IFontItem[][] {
+    const { str, column, showStrokeOrder, strokeNumber } = params;
     const result: IFontItem[][] = [];
     const strLength = str.length;
     const rows = this.calculateRows(str, column);

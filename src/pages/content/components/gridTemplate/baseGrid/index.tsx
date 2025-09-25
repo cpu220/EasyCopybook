@@ -44,7 +44,7 @@ const BaseGrid: React.FC<BaseGridProps> = ({ fontLibraryItem }) => {
             ref={containerRef}
             className={styles['grid-container']}
         >
-            {createGrid(safeFontList, safeTemplateConfig, charStrokeCounts)}
+            {createGrid({ list: safeFontList, templateConfig: safeTemplateConfig, charStrokeCounts })}
         </div>
     )
 }

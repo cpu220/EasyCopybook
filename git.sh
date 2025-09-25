@@ -1,1 +1,1 @@
-git add . && git commit -m 'feat: 增加诗词' 
+git add . && git commit -m 'feat: 优化入参规则 ' 
